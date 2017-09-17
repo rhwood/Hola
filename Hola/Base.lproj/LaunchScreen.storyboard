@@ -21,7 +21,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="hola-logo.pdf" translatesAutoresizingMaskIntoConstraints="NO" id="rb2-j6-41s">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Hola-Logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="rb2-j6-41s">
                                 <rect key="frame" x="16" y="162" width="343" height="343"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
@@ -49,6 +49,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="hola-logo.pdf" width="16" height="16"/>
+        <image name="Hola-Logo.png" width="1024" height="1024"/>
     </resources>
 </document>

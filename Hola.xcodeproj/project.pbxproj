@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		481269821F6F06C5003E401C /* hola-logo.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 481269811F6F06C5003E401C /* hola-logo.pdf */; };
+		4842950E1F6F1906006E70C4 /* Hola-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4842950D1F6F1906006E70C4 /* Hola-Logo.png */; };
 		488F1D301F6DCDD4008559A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D2F1F6DCDD4008559A8 /* AppDelegate.swift */; };
 		488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D311F6DCDD4008559A8 /* DomainViewController.swift */; };
 		488F1D341F6DCDD4008559A8 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D331F6DCDD4008559A8 /* WebViewController.swift */; };
@@ -36,7 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		481269811F6F06C5003E401C /* hola-logo.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "hola-logo.pdf"; sourceTree = "<group>"; };
+		4842950D1F6F1906006E70C4 /* Hola-Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Hola-Logo.png"; sourceTree = "<group>"; };
 		488F1D2C1F6DCDD4008559A8 /* Hola.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hola.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		488F1D2F1F6DCDD4008559A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		488F1D311F6DCDD4008559A8 /* DomainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainViewController.swift; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 				488F1D331F6DCDD4008559A8 /* WebViewController.swift */,
 				488F1D351F6DCDD4008559A8 /* Main.storyboard */,
 				488F1D381F6DCDD4008559A8 /* Assets.xcassets */,
-				481269811F6F06C5003E401C /* hola-logo.pdf */,
+				4842950D1F6F1906006E70C4 /* Hola-Logo.png */,
 				488F1D3A1F6DCDD4008559A8 /* LaunchScreen.storyboard */,
 				488F1D3D1F6DCDD4008559A8 /* Info.plist */,
 			);
@@ -119,7 +119,6 @@
 				488F1D461F6DCDD4008559A8 /* HolaTests.swift */,
 				488F1D481F6DCDD4008559A8 /* Info.plist */,
 			);
-			name = HolaTests;
 			path = HolaTests;
 			sourceTree = "<group>";
 		};
@@ -129,7 +128,6 @@
 				488F1D511F6DCDD4008559A8 /* HolaUITests.swift */,
 				488F1D531F6DCDD4008559A8 /* Info.plist */,
 			);
-			name = HolaUITests;
 			path = HolaUITests;
 			sourceTree = "<group>";
 		};
@@ -243,9 +241,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4842950E1F6F1906006E70C4 /* Hola-Logo.png in Resources */,
 				488F1D3C1F6DCDD4008559A8 /* LaunchScreen.storyboard in Resources */,
 				488F1D391F6DCDD4008559A8 /* Assets.xcassets in Resources */,
-				481269821F6F06C5003E401C /* hola-logo.pdf in Resources */,
 				488F1D371F6DCDD4008559A8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
