@@ -56,6 +56,12 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         services.removeAll()
     }
 
+    var domain: String? {
+        didSet {
+            // Update the view.
+        }
+    }
+
     // MARK: - Segues
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
