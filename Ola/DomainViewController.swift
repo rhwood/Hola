@@ -1,5 +1,5 @@
 //
-//  MasterViewController.swift
+//  DomainViewController.swift
 //  Ola
 //
 //  Created by Randall Wood on 9/16/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MasterViewController: UITableViewController, NetServiceBrowserDelegate, NetServiceDelegate {
+class DomainViewController: UITableViewController, NetServiceBrowserDelegate, NetServiceDelegate {
 
     var detailViewController: DetailViewController? = nil
     var httpBrowser: NetServiceBrowser!
@@ -28,7 +28,7 @@ class MasterViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         httpBrowser.delegate = self
         httpsBrowser = NetServiceBrowser()
         httpsBrowser.delegate = self
-        // Do any additional setup after loading the view, typically from a nib.
+
         navigationItem.title = DOMAIN
         navigationItem.leftBarButtonItem = editButtonItem
 
@@ -70,6 +70,15 @@ class MasterViewController: UITableViewController, NetServiceBrowserDelegate, Ne
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
+    }
+
+    @IBAction func refresh(_ sender: UIBarButtonItem) {
+        httpBrowser.stop()
+        httpsBrowser.stop()
+        services.removeAll()
+        urls.removeAll()
+        httpBrowser.searchForServices(ofType: HTTP, inDomain: DOMAIN)
+        httpsBrowser.searchForServices(ofType: HTTPS, inDomain: DOMAIN)
     }
 
     // MARK: - Table View

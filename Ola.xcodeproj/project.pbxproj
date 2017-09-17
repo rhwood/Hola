@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		488F1D301F6DCDD4008559A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D2F1F6DCDD4008559A8 /* AppDelegate.swift */; };
-		488F1D321F6DCDD4008559A8 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D311F6DCDD4008559A8 /* MasterViewController.swift */; };
+		488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D311F6DCDD4008559A8 /* DomainViewController.swift */; };
 		488F1D341F6DCDD4008559A8 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D331F6DCDD4008559A8 /* DetailViewController.swift */; };
 		488F1D371F6DCDD4008559A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 488F1D351F6DCDD4008559A8 /* Main.storyboard */; };
 		488F1D391F6DCDD4008559A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 488F1D381F6DCDD4008559A8 /* Assets.xcassets */; };
@@ -37,7 +37,7 @@
 /* Begin PBXFileReference section */
 		488F1D2C1F6DCDD4008559A8 /* Ola.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ola.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		488F1D2F1F6DCDD4008559A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		488F1D311F6DCDD4008559A8 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
+		488F1D311F6DCDD4008559A8 /* DomainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainViewController.swift; sourceTree = "<group>"; };
 		488F1D331F6DCDD4008559A8 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		488F1D361F6DCDD4008559A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		488F1D381F6DCDD4008559A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				488F1D2F1F6DCDD4008559A8 /* AppDelegate.swift */,
-				488F1D311F6DCDD4008559A8 /* MasterViewController.swift */,
+				488F1D311F6DCDD4008559A8 /* DomainViewController.swift */,
 				488F1D331F6DCDD4008559A8 /* DetailViewController.swift */,
 				488F1D351F6DCDD4008559A8 /* Main.storyboard */,
 				488F1D381F6DCDD4008559A8 /* Assets.xcassets */,
@@ -266,7 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				488F1D341F6DCDD4008559A8 /* DetailViewController.swift in Sources */,
-				488F1D321F6DCDD4008559A8 /* MasterViewController.swift in Sources */,
+				488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */,
 				488F1D301F6DCDD4008559A8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -423,6 +423,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = K2672N7845;
 				INFOPLIST_FILE = Ola/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.ola;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -436,6 +437,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = K2672N7845;
 				INFOPLIST_FILE = Ola/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.ola;
 				PRODUCT_NAME = "$(TARGET_NAME)";
