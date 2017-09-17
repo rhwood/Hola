@@ -12,16 +12,20 @@ class MasterViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     var detailViewController: DetailViewController? = nil
     var httpBrowser: NetServiceBrowser!
+    var httpsBrowser: NetServiceBrowser!
     var pendingServices = [NetService]()
     var services = [URL: NetService]()
     var urls = [URL]()
     let HTTP = "_http._tcp."
+    let HTTPS = "_https._tcp."
     let DOMAIN = "local"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         httpBrowser = NetServiceBrowser()
         httpBrowser.delegate = self
+        httpsBrowser = NetServiceBrowser()
+        httpsBrowser.delegate = self
         // Do any additional setup after loading the view, typically from a nib.
         navigationItem.title = DOMAIN
         navigationItem.leftBarButtonItem = editButtonItem
@@ -35,11 +39,13 @@ class MasterViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     override func viewWillAppear(_ animated: Bool) {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
         httpBrowser.searchForServices(ofType: HTTP, inDomain: DOMAIN)
+        httpsBrowser.searchForServices(ofType: HTTPS, inDomain: DOMAIN)
         super.viewWillAppear(animated)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         httpBrowser.stop()
+        httpsBrowser.stop()
         super.viewDidDisappear(animated)
     }
 
@@ -115,9 +121,10 @@ class MasterViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
         print("Removed NetService...")
-        let key = url(service)
-        services.removeValue(forKey: key)
-        urls.remove(at: urls.index(of: key)!)
+        if let key = url(service) {
+            services.removeValue(forKey: key)
+            urls.remove(at: urls.index(of: key)!)
+        }
         if !moreComing {
             self.tableView.reloadData()
         }
@@ -128,14 +135,20 @@ class MasterViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     func netServiceDidResolveAddress(_ service: NetService) {
         print("Resolved NetService...")
         pendingServices.remove(at: pendingServices.index(of: service)!)
-        let key = url(service)
-        urls.append(key)
-        services[key] = service
-        self.tableView.reloadData()
+        if let key = url(service) {
+            urls.append(key)
+            services[key] = service
+            self.tableView.reloadData()
+        }
     }
 
-    func url(_ service: NetService) -> URL {
-        return URL(string:"http://\(service.hostName!):\(service.port)")!
+    func url(_ service: NetService) -> URL? {
+        // TODO turn type into protocol for URL
+        print("type = \(service.type)")
+        if let hostName = service.hostName {
+            return URL(string:"http://\(hostName):\(service.port)")!
+        }
+        return nil
     }
 }
 
