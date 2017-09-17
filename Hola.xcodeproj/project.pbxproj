@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4842950E1F6F1906006E70C4 /* Hola-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4842950D1F6F1906006E70C4 /* Hola-Logo.png */; };
-		484295101F6F1D76006E70C4 /* DomainsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4842950F1F6F1D76006E70C4 /* DomainsViewController.swift */; };
 		488F1D301F6DCDD4008559A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D2F1F6DCDD4008559A8 /* AppDelegate.swift */; };
 		488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D311F6DCDD4008559A8 /* DomainViewController.swift */; };
 		488F1D341F6DCDD4008559A8 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D331F6DCDD4008559A8 /* WebViewController.swift */; };
@@ -38,7 +37,6 @@
 
 /* Begin PBXFileReference section */
 		4842950D1F6F1906006E70C4 /* Hola-Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Hola-Logo.png"; sourceTree = "<group>"; };
-		4842950F1F6F1D76006E70C4 /* DomainsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainsViewController.swift; sourceTree = "<group>"; };
 		488F1D2C1F6DCDD4008559A8 /* Hola.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hola.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		488F1D2F1F6DCDD4008559A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		488F1D311F6DCDD4008559A8 /* DomainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainViewController.swift; sourceTree = "<group>"; };
@@ -111,7 +109,6 @@
 				4842950D1F6F1906006E70C4 /* Hola-Logo.png */,
 				488F1D3A1F6DCDD4008559A8 /* LaunchScreen.storyboard */,
 				488F1D3D1F6DCDD4008559A8 /* Info.plist */,
-				4842950F1F6F1D76006E70C4 /* DomainsViewController.swift */,
 			);
 			path = Hola;
 			sourceTree = "<group>";
@@ -272,7 +269,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				484295101F6F1D76006E70C4 /* DomainsViewController.swift in Sources */,
 				488F1D341F6DCDD4008559A8 /* WebViewController.swift in Sources */,
 				488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */,
 				488F1D301F6DCDD4008559A8 /* AppDelegate.swift in Sources */,
