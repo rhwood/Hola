@@ -1,5 +1,5 @@
 //
-//  DetailViewController.swift
+//  WebViewController.swift
 //  Ola
 //
 //  Created by Randall Wood on 9/16/17.
@@ -9,7 +9,7 @@
 import UIKit
 import WebKit
 
-class DetailViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
+class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 
     var webView: WKWebView!
 

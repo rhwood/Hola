@@ -10,7 +10,7 @@ import UIKit
 
 class DomainViewController: UITableViewController, NetServiceBrowserDelegate, NetServiceDelegate {
 
-    var detailViewController: DetailViewController? = nil
+    var detailViewController: WebViewController? = nil
     var httpBrowser: NetServiceBrowser!
     var httpsBrowser: NetServiceBrowser!
     var httpSearching = false
@@ -34,7 +34,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
         if let split = splitViewController {
             let controllers = split.viewControllers
-            detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
+            detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? WebViewController
         }
     }
 
@@ -63,7 +63,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             if let indexPath = tableView.indexPathForSelectedRow {
                 let url = urls[indexPath.row]
                 let service = services[url]
-                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+                let controller = (segue.destination as! UINavigationController).topViewController as! WebViewController
                 controller.service = service
                 controller.url = url
                 controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
