@@ -109,7 +109,7 @@
                             <outlet property="delegate" destination="7bK-jq-Zjz" id="RA6-mI-bju"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Discovered Services" id="Zdf-7t-Un8">
+                    <navigationItem key="navigationItem" title="Services" prompt="Bonjour Web Services" id="Zdf-7t-Un8" userLabel="Services">
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="X0R-v7-aNV"/>
                     </navigationItem>
                 </tableViewController>

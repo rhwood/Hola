@@ -20,7 +20,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     var urls = [URL]()
     let HTTP = "_http._tcp."
     let HTTPS = "_https._tcp."
-    let DOMAIN = "local"
+    let DOMAIN = "" // use default instead of "local"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +29,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         httpsBrowser = NetServiceBrowser()
         httpsBrowser.delegate = self
 
-        navigationItem.title = DOMAIN
+        // navigationItem.title = DOMAIN
         navigationItem.leftBarButtonItem = editButtonItem
 
         if let split = splitViewController {
