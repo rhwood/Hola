@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,8 +14,8 @@
 		488F1D371F6DCDD4008559A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 488F1D351F6DCDD4008559A8 /* Main.storyboard */; };
 		488F1D391F6DCDD4008559A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 488F1D381F6DCDD4008559A8 /* Assets.xcassets */; };
 		488F1D3C1F6DCDD4008559A8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 488F1D3A1F6DCDD4008559A8 /* LaunchScreen.storyboard */; };
-		488F1D471F6DCDD4008559A8 /* OlaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D461F6DCDD4008559A8 /* OlaTests.swift */; };
-		488F1D521F6DCDD4008559A8 /* OlaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D511F6DCDD4008559A8 /* OlaUITests.swift */; };
+		488F1D471F6DCDD4008559A8 /* HolaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D461F6DCDD4008559A8 /* HolaTests.swift */; };
+		488F1D521F6DCDD4008559A8 /* HolaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D511F6DCDD4008559A8 /* HolaUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,14 +24,14 @@
 			containerPortal = 488F1D241F6DCDD4008559A8 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 488F1D2B1F6DCDD4008559A8;
-			remoteInfo = Ola;
+			remoteInfo = Hola;
 		};
 		488F1D4E1F6DCDD4008559A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 488F1D241F6DCDD4008559A8 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 488F1D2B1F6DCDD4008559A8;
-			remoteInfo = Ola;
+			remoteInfo = Hola;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -46,10 +46,10 @@
 		488F1D3B1F6DCDD4008559A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		488F1D3D1F6DCDD4008559A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		488F1D421F6DCDD4008559A8 /* HolaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HolaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		488F1D461F6DCDD4008559A8 /* OlaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaTests.swift; sourceTree = "<group>"; };
+		488F1D461F6DCDD4008559A8 /* HolaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolaTests.swift; sourceTree = "<group>"; };
 		488F1D481F6DCDD4008559A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		488F1D4D1F6DCDD4008559A8 /* HolaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HolaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		488F1D511F6DCDD4008559A8 /* OlaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaUITests.swift; sourceTree = "<group>"; };
+		488F1D511F6DCDD4008559A8 /* HolaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolaUITests.swift; sourceTree = "<group>"; };
 		488F1D531F6DCDD4008559A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,28 +110,27 @@
 				488F1D3A1F6DCDD4008559A8 /* LaunchScreen.storyboard */,
 				488F1D3D1F6DCDD4008559A8 /* Info.plist */,
 			);
-			name = Hola;
-			path = Ola;
+			path = Hola;
 			sourceTree = "<group>";
 		};
 		488F1D451F6DCDD4008559A8 /* HolaTests */ = {
 			isa = PBXGroup;
 			children = (
-				488F1D461F6DCDD4008559A8 /* OlaTests.swift */,
+				488F1D461F6DCDD4008559A8 /* HolaTests.swift */,
 				488F1D481F6DCDD4008559A8 /* Info.plist */,
 			);
 			name = HolaTests;
-			path = OlaTests;
+			path = HolaTests;
 			sourceTree = "<group>";
 		};
 		488F1D501F6DCDD4008559A8 /* HolaUITests */ = {
 			isa = PBXGroup;
 			children = (
-				488F1D511F6DCDD4008559A8 /* OlaUITests.swift */,
+				488F1D511F6DCDD4008559A8 /* HolaUITests.swift */,
 				488F1D531F6DCDD4008559A8 /* Info.plist */,
 			);
 			name = HolaUITests;
-			path = OlaUITests;
+			path = HolaUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,7 +149,7 @@
 			dependencies = (
 			);
 			name = Hola;
-			productName = Ola;
+			productName = Hola;
 			productReference = 488F1D2C1F6DCDD4008559A8 /* Hola.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -168,7 +167,7 @@
 				488F1D441F6DCDD4008559A8 /* PBXTargetDependency */,
 			);
 			name = HolaTests;
-			productName = OlaTests;
+			productName = HolaTests;
 			productReference = 488F1D421F6DCDD4008559A8 /* HolaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -186,7 +185,7 @@
 				488F1D4F1F6DCDD4008559A8 /* PBXTargetDependency */,
 			);
 			name = HolaUITests;
-			productName = OlaUITests;
+			productName = HolaUITests;
 			productReference = 488F1D4D1F6DCDD4008559A8 /* HolaUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
@@ -220,7 +219,7 @@
 				};
 			};
 			buildConfigurationList = 488F1D271F6DCDD4008559A8 /* Build configuration list for PBXProject "Hola" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -282,7 +281,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				488F1D471F6DCDD4008559A8 /* OlaTests.swift in Sources */,
+				488F1D471F6DCDD4008559A8 /* HolaTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,7 +289,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				488F1D521F6DCDD4008559A8 /* OlaUITests.swift in Sources */,
+				488F1D521F6DCDD4008559A8 /* HolaUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,7 +428,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = K2672N7845;
-				INFOPLIST_FILE = Ola/Info.plist;
+				INFOPLIST_FILE = Hola/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.ola;
@@ -443,7 +442,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = K2672N7845;
-				INFOPLIST_FILE = Ola/Info.plist;
+				INFOPLIST_FILE = Hola/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.ola;
@@ -458,9 +457,9 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = K2672N7845;
-				INFOPLIST_FILE = OlaTests/Info.plist;
+				INFOPLIST_FILE = HolaTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.OlaTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.HolaTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Hola.app/Hola";
@@ -473,9 +472,9 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = K2672N7845;
-				INFOPLIST_FILE = OlaTests/Info.plist;
+				INFOPLIST_FILE = HolaTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.OlaTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.HolaTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Hola.app/Hola";
@@ -487,12 +486,12 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = K2672N7845;
-				INFOPLIST_FILE = OlaUITests/Info.plist;
+				INFOPLIST_FILE = HolaUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.OlaUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.HolaUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = Ola;
+				TEST_TARGET_NAME = Hola;
 			};
 			name = Debug;
 		};
@@ -501,12 +500,12 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = K2672N7845;
-				INFOPLIST_FILE = OlaUITests/Info.plist;
+				INFOPLIST_FILE = HolaUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.OlaUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexandriasoftware.HolaUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = Ola;
+				TEST_TARGET_NAME = Hola;
 			};
 			name = Release;
 		};

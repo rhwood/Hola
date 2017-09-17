@@ -1,6 +1,6 @@
 //
-//  OlaUITests.swift
-//  OlaUITests
+//  HolaUITests.swift
+//  HolaUITests
 //
 //  Created by Randall Wood on 9/16/17.
 //  Copyright © 2017 Alexandria Software. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class OlaUITests: XCTestCase {
+class HolaUITests: XCTestCase {
         
     override func setUp() {
         super.setUp()
