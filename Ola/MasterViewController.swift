@@ -13,6 +13,8 @@ class MasterViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     var detailViewController: DetailViewController? = nil
     var httpBrowser: NetServiceBrowser!
     var httpsBrowser: NetServiceBrowser!
+    var httpSearching = false
+    var httpsSearching = false
     var pendingServices = [NetService]()
     var services = [URL: NetService]()
     var urls = [URL]()
@@ -98,18 +100,36 @@ class MasterViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
         print("Searching...")
+        if browser === httpBrowser {
+            httpSearching = true
+        }
+        if browser === httpsBrowser {
+            httpsSearching = true
+        }
     }
 
     func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
         print("Stopped Search")
+        if browser === httpBrowser {
+            httpSearching = false
+        }
+        if browser === httpsBrowser {
+            httpsSearching = false
+        }
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String : NSNumber]) {
         print("Something went wrong...")
+        if browser === httpBrowser {
+            httpSearching = false
+        }
+        if browser === httpsBrowser {
+            httpsSearching = false
+        }
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
-        print("Found NetService...")
+        print("Found NetService \(service.name)...")
         if service.port == -1 {
             service.delegate = self
             pendingServices.append(service)
@@ -120,10 +140,20 @@ class MasterViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        print("Removed NetService...")
+        print("Removing NetService \(service.name)...")
         if let key = url(service) {
             services.removeValue(forKey: key)
             urls.remove(at: urls.index(of: key)!)
+        } else {
+            // reset and start over
+            services.removeAll()
+            urls.removeAll()
+            if !httpSearching {
+                browser.searchForServices(ofType: HTTP, inDomain: DOMAIN)
+            }
+            if !httpsSearching {
+                browser.searchForServices(ofType: HTTPS, inDomain: DOMAIN)
+            }
         }
         if !moreComing {
             self.tableView.reloadData()
@@ -143,10 +173,12 @@ class MasterViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     func url(_ service: NetService) -> URL? {
-        // TODO turn type into protocol for URL
-        print("type = \(service.type)")
+        var p = "http"
+        if service.type == HTTPS {
+            p = "https"
+        }
         if let hostName = service.hostName {
-            return URL(string:"http://\(hostName):\(service.port)")!
+            return URL(string:"\(p)://\(hostName):\(service.port)")!
         }
         return nil
     }
