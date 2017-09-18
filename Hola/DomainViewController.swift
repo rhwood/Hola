@@ -30,8 +30,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         httpsBrowser.delegate = self
 
         // navigationItem.title = DOMAIN
-        navigationItem.leftBarButtonItem = editButtonItem
-
+        
         if let split = splitViewController {
             let controllers = split.viewControllers
             detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? WebViewController
