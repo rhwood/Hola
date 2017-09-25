@@ -32,9 +32,8 @@
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
+		<string>wifi</string>
 	</array>
-	<key>UIRequiresPersistentWiFi</key>
-	<true/>
 	<key>UIStatusBarTintParameters</key>
 	<dict>
 		<key>UINavigationBar</key>
