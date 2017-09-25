@@ -11,6 +11,7 @@ import UIKit
 class DomainViewController: UITableViewController, NetServiceBrowserDelegate, NetServiceDelegate {
 
     var detailViewController: WebViewController? = nil
+
     var httpBrowser: NetServiceBrowser!
     var httpsBrowser: NetServiceBrowser!
     var httpSearching = false
@@ -30,7 +31,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         httpsBrowser.delegate = self
 
         // navigationItem.title = DOMAIN
-        
+        self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), for: UIControlEvents.valueChanged)
+
         if let split = splitViewController {
             let controllers = split.viewControllers
             detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? WebViewController
@@ -72,12 +74,16 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     @IBAction func refresh(_ sender: UIBarButtonItem) {
+        refreshControl?.beginRefreshing()
         httpBrowser.stop()
         httpsBrowser.stop()
         services.removeAll()
         urls.removeAll()
         httpBrowser.searchForServices(ofType: HTTP, inDomain: DOMAIN)
         httpsBrowser.searchForServices(ofType: HTTPS, inDomain: DOMAIN)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: {
+            self.refreshControl?.endRefreshing()
+        })
     }
 
     // MARK: - Table View
@@ -107,32 +113,47 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     // MARK: - NetServices Browser
 
     func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
-        print("Searching...")
         if browser === httpBrowser {
+            print("Searching for HTTP services...")
             httpSearching = true
         }
         if browser === httpsBrowser {
+            print("Searching for HTTPS services...")
             httpsSearching = true
         }
     }
 
     func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
-        print("Stopped Search")
         if browser === httpBrowser {
+            print("Stopped searching for HTTP services.")
             httpSearching = false
+            if !httpsSearching {
+                refreshControl?.endRefreshing()
+            }
         }
         if browser === httpsBrowser {
+            print("Stopped searching for HTTPS services.")
             httpsSearching = false
+            if !httpSearching {
+                refreshControl?.endRefreshing()
+            }
         }
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String : NSNumber]) {
-        print("Something went wrong...")
         if browser === httpBrowser {
+            print("Something went wrong searching for HTTP services...")
             httpSearching = false
+            if !httpsSearching {
+                refreshControl?.endRefreshing()
+            }
         }
         if browser === httpsBrowser {
+            print("Something went wrong searching for HTTPS services...")
             httpsSearching = false
+            if !httpSearching {
+                refreshControl?.endRefreshing()
+            }
         }
     }
 
@@ -144,6 +165,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             service.resolve(withTimeout: 10)
         } else {
             self.netServiceDidResolveAddress(service)
+        }
+        if !moreComing {
+            refreshControl?.endRefreshing()
         }
     }
 
