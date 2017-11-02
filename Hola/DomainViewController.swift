@@ -93,21 +93,36 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return services.count
+        return services.count > 0 ? services.count : 1
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
-        let service = services[urls[indexPath.row]]
-        cell.textLabel!.text = service?.name
-        cell.detailTextLabel!.text = urls[indexPath.row].absoluteString
+        if services.count > 0 {
+            let service = services[urls[indexPath.row]]
+            cell.textLabel!.text = service?.name
+            cell.detailTextLabel!.text = urls[indexPath.row].absoluteString
+            cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+        } else {
+            cell.textLabel!.text = "No sites found"
+            cell.detailTextLabel!.text = "Are expected sites running?"
+            cell.accessoryType = UITableViewCellAccessoryType.none
+        }
         return cell
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (services.count > 0) {
+            performSegue(withIdentifier: "showDetail", sender: self)
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
     }
 
     // MARK: - NetServices Browser
