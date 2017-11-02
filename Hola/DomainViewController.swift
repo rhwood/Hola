@@ -73,6 +73,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         }
     }
 
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        return services.count > 0
+    }
+
     @IBAction func refresh(_ sender: UIBarButtonItem) {
         refreshControl?.beginRefreshing()
         httpBrowser.stop()
@@ -118,9 +122,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (services.count > 0) {
-            performSegue(withIdentifier: "showDetail", sender: self)
-        } else {
+        if (services.count == 0) {
             tableView.deselectRow(at: indexPath, animated: true)
         }
     }
