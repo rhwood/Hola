@@ -111,9 +111,24 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         } else {
             cell.textLabel!.text = "No sites found"
             cell.detailTextLabel!.text = "Are expected sites running?"
-            cell.accessoryType = UITableViewCellAccessoryType.none
+            cell.accessoryType = UITableViewCellAccessoryType.detailButton
         }
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        if services.count > 0 {
+            // open sheet with details that allows site to be opened?
+        } else {
+            let message: String = """
+Unable to find sites on this network.
+
+Ensure you are on the desired network and expected sites, applications, or devices are running.
+"""
+            let alert = UIAlertController(title: "No Sites Found", message: message, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
