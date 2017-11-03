@@ -160,6 +160,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String : NSNumber]) {
         if browser === httpBrowser {
             print("Something went wrong searching for HTTP services...")
+            print(errorDict.description)
             httpSearching = false
             if !httpsSearching {
                 refreshControl?.endRefreshing()
@@ -167,6 +168,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         }
         if browser === httpsBrowser {
             print("Something went wrong searching for HTTPS services...")
+            print(errorDict.description)
             httpsSearching = false
             if !httpSearching {
                 refreshControl?.endRefreshing()
