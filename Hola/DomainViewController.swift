@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SystemConfiguration.CaptiveNetwork
 
 class DomainViewController: UITableViewController, NetServiceBrowserDelegate, NetServiceDelegate {
 
@@ -120,8 +121,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         if services.count > 0 {
             // open sheet with details that allows site to be opened?
         } else {
+            let network = getSSID()
             let message: String = """
-Unable to find sites on this network.
+Unable to find sites on \(network ?? "this network").
 
 Ensure you are on the desired network and expected sites, applications, or devices are running.
 """
@@ -247,6 +249,24 @@ Ensure you are on the desired network and expected sites, applications, or devic
             return URL(string:"\(p)://\(hostName):\(service.port)")!
         }
         return nil
+    }
+
+    func getSSID() -> String? {
+        let interfaces = CNCopySupportedInterfaces()
+        if interfaces == nil {
+            return nil
+        }
+        let interfacesArray = interfaces as! [String]
+        if interfacesArray.count <= 0 {
+            return nil
+        }
+        let interfaceName = interfacesArray[0] as String
+        let unsafeInterfaceData =     CNCopyCurrentNetworkInfo(interfaceName as CFString)
+        if unsafeInterfaceData == nil {
+            return nil
+        }
+        let interfaceData = unsafeInterfaceData as! Dictionary <String,AnyObject>
+        return interfaceData["SSID"] as? String
     }
 }
 
