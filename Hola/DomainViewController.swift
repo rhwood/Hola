@@ -7,11 +7,10 @@
 //
 
 import UIKit
+import SafariServices
 import SystemConfiguration.CaptiveNetwork
 
 class DomainViewController: UITableViewController, NetServiceBrowserDelegate, NetServiceDelegate {
-
-    var detailViewController: WebViewController? = nil
 
     var httpBrowser: NetServiceBrowser!
     var httpsBrowser: NetServiceBrowser!
@@ -33,15 +32,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
         // navigationItem.title = DOMAIN
         self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), for: UIControlEvents.valueChanged)
-
-        if let split = splitViewController {
-            let controllers = split.viewControllers
-            detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? WebViewController
-        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
         httpBrowser.searchForServices(ofType: HTTP, inDomain: DOMAIN)
         httpsBrowser.searchForServices(ofType: HTTPS, inDomain: DOMAIN)
         super.viewWillAppear(animated)
@@ -64,12 +57,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         if segue.identifier == "showDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
                 let url = urls[indexPath.row]
-                let service = services[url]
-                let controller = (segue.destination as! UINavigationController).topViewController as! WebViewController
-                controller.service = service
-                controller.url = url
-                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-                controller.navigationItem.leftItemsSupplementBackButton = true
+                let controller = SFSafariViewController.init(url: url)
+                present(controller, animated: true)
             }
         }
     }
@@ -141,6 +130,10 @@ Ensure you are on the desired network and expected sites, applications, or devic
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (services.count == 0) {
             tableView.deselectRow(at: indexPath, animated: true)
+        } else {
+            let url = urls[indexPath.row]
+            let controller = SFSafariViewController.init(url: url)
+            present(controller, animated: true)
         }
     }
 
@@ -194,7 +187,7 @@ Ensure you are on the desired network and expected sites, applications, or devic
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
-        print("Found NetService \(service.name)...")
+        print("Found NetService \"\(service.name)\"...")
         if service.port == -1 {
             service.delegate = self
             pendingServices.append(service)
@@ -208,7 +201,7 @@ Ensure you are on the desired network and expected sites, applications, or devic
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        print("Removing NetService \(service.name)...")
+        print("Removing NetService \"\(service.name)\"...")
         if let key = url(service) {
             services.removeValue(forKey: key)
             urls.remove(at: urls.index(of: key)!)
