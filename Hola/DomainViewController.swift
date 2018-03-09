@@ -30,7 +30,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         httpsBrowser = NetServiceBrowser()
         httpsBrowser.delegate = self
 
-        // navigationItem.title = DOMAIN
+        self.title = "\((DOMAIN == "") ? "Local" : DOMAIN) Sites"
         self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), for: UIControlEvents.valueChanged)
     }
 
