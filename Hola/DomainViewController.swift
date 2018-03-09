@@ -30,7 +30,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         httpsBrowser = NetServiceBrowser()
         httpsBrowser.delegate = self
 
-        self.title = "\((DOMAIN == "") ? "Local" : DOMAIN) Sites"
+        if DOMAIN == "" {
+            self.title = NSLocalizedString("LOCAL_SITES", comment: "list of sites in default (local) domain")
+        } else {
+        self.title = NSString.localizedStringWithFormat("DOMAIN_SITES", DOMAIN) as String
+        }
         self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), for: UIControlEvents.valueChanged)
     }
 
@@ -99,8 +103,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             cell.detailTextLabel!.text = urls[indexPath.row].absoluteString
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         } else {
-            cell.textLabel!.text = "No sites found"
-            cell.detailTextLabel!.text = "Are expected sites running?"
+            cell.textLabel!.text = NSLocalizedString("NO_SITES_CELL_TITLE", comment: "Cell title with no sites")
+            cell.detailTextLabel!.text = NSLocalizedString("NO_SITES_CELL_DETAIL", comment: "Cell details with no sites")
             cell.accessoryType = UITableViewCellAccessoryType.detailButton
         }
         return cell

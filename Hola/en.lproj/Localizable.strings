@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+  Hola
+
+  Created by Randall Wood on 3/9/18.
+  Copyright © 2018 Alexandria Software. All rights reserved.
+*/
+
+/* list of sites in non-default domain */
+"DOMAIN_SITES" = "%@ Sites";
+
+/* list of sites in default (local) domain */
+"LOCAL_SITES" = "Local Sites";
+
+/* Cell title with no sites */
+"NO_SITES_CELL_TITLE" = "No sites found";
+
+/* Cell details with no sites */
+"NO_SITES_CELL_DETAIL" = "Are expected sites running?";
