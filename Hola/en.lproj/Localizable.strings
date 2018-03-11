@@ -6,7 +6,7 @@
   Copyright © 2018 Alexandria Software. All rights reserved.
 */
 
-/* list of sites in non-default domain */
+/* list of sites in non-default domain - replacement is domain */
 "DOMAIN_SITES" = "%@ Sites";
 
 /* list of sites in default (local) domain */
@@ -17,3 +17,14 @@
 
 /* Cell details with no sites */
 "NO_SITES_CELL_DETAIL" = "Are expected sites running?";
+
+/* No sites found alert OK action */
+"NO_SITES_ALERT_OK_ACTION" = "OK";
+
+/* No sites found alert title */
+"NO_SITES_ALERT_TITLE" = "No Sites Found";
+
+/* No sites found alert message - replacement is network name */
+"NO_SITES_ALERT_MESSAGE" = "Unable to find sites on %@.
+
+Ensure you are on the desired network and expected sites, applications, or devices are running.";

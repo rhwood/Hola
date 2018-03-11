@@ -33,7 +33,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         if DOMAIN == "" {
             self.title = NSLocalizedString("LOCAL_SITES", comment: "list of sites in default (local) domain")
         } else {
-        self.title = NSString.localizedStringWithFormat("DOMAIN_SITES", DOMAIN) as String
+        self.title = NSString.localizedStringWithFormat(
+            NSLocalizedString("DOMAIN_SITES", comment: "list of sites in non-default domain - replacement is domain") as NSString,
+                              DOMAIN) as String
         }
         self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), for: UIControlEvents.valueChanged)
     }
@@ -115,13 +117,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             // open sheet with details that allows site to be opened?
         } else {
             let network = getSSID()
-            let message: String = """
-Unable to find sites on \(network ?? "this network").
-
-Ensure you are on the desired network and expected sites, applications, or devices are running.
-"""
-            let alert = UIAlertController(title: "No Sites Found", message: message, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            let message = NSString.localizedStringWithFormat(
+                NSLocalizedString("NO_SITES_ALERT_MESSAGE", comment:"No sites found alert message - replacement is network name") as NSString
+                , network ?? "this network") as String
+            let alert = UIAlertController(title: NSLocalizedString("NO_SITES_ALERT_TITLE", comment: "No sites found alert title"), message: message, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("NO_SITES_ALERT_OK_ACTION", comment: "No sites found alert OK action"), style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
