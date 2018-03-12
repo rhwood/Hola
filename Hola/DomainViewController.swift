@@ -12,43 +12,39 @@ import SystemConfiguration.CaptiveNetwork
 
 class DomainViewController: UITableViewController, NetServiceBrowserDelegate, NetServiceDelegate {
 
-    var httpBrowser: NetServiceBrowser!
-    var httpsBrowser: NetServiceBrowser!
-    var httpSearching = false
-    var httpsSearching = false
+    var domainBrowser: NetServiceBrowser!
+    var httpBrowsers = [NetServiceBrowser]()
+    var httpsBrowsers = [NetServiceBrowser]()
+    var httpSearching = 0
+    var httpsSearching = 0
     var pendingServices = [NetService]()
-    var services = [URL: NetService]()
-    var urls = [URL]()
+    var services = [String: [URL: NetService]]()
+    var domains = [String]()
+    var urls = [String: [URL]]()
     let HTTP = "_http._tcp."
     let HTTPS = "_https._tcp."
-    let DOMAIN = "" // use default instead of "local"
+    let DOMAIN = "" // use default instead of "local."
+    let LOCAL_DOMAIN = "local." // the local domain, handled as "" in app
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        httpBrowser = NetServiceBrowser()
-        httpBrowser.delegate = self
-        httpsBrowser = NetServiceBrowser()
-        httpsBrowser.delegate = self
-
-        if DOMAIN == "" {
-            self.title = NSLocalizedString("LOCAL_SITES", comment: "list of sites in default (local) domain")
-        } else {
-        self.title = NSString.localizedStringWithFormat(
-            NSLocalizedString("DOMAIN_SITES", comment: "list of sites in non-default domain - replacement is domain") as NSString,
-                              DOMAIN) as String
-        }
-        self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), for: UIControlEvents.valueChanged)
+        domainBrowser = NetServiceBrowser()
+        domainBrowser.delegate = self
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        httpBrowser.searchForServices(ofType: HTTP, inDomain: DOMAIN)
-        httpsBrowser.searchForServices(ofType: HTTPS, inDomain: DOMAIN)
+        domainBrowser.searchForBrowsableDomains();
         super.viewWillAppear(animated)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        httpBrowser.stop()
-        httpsBrowser.stop()
+        domainBrowser.stop();
+        for httpBrowser in httpBrowsers {
+            httpBrowser.stop()
+        }
+        for httpsBrowser in httpsBrowsers {
+            httpsBrowser.stop()
+        }
         super.viewDidDisappear(animated)
     }
 
@@ -57,30 +53,18 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         services.removeAll()
     }
 
-    // MARK: - Segues
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDetail" {
-            if let indexPath = tableView.indexPathForSelectedRow {
-                let url = urls[indexPath.row]
-                let controller = SFSafariViewController.init(url: url)
-                present(controller, animated: true)
-            }
-        }
-    }
-
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        return services.count > 0
-    }
-
     @IBAction func refresh(_ sender: UIBarButtonItem) {
         refreshControl?.beginRefreshing()
-        httpBrowser.stop()
-        httpsBrowser.stop()
+        domainBrowser.stop()
+        for httpBrowser in httpBrowsers {
+            httpBrowser.stop()
+        }
+        for httpsBrowser in httpsBrowsers {
+            httpsBrowser.stop()
+        }
         services.removeAll()
         urls.removeAll()
-        httpBrowser.searchForServices(ofType: HTTP, inDomain: DOMAIN)
-        httpsBrowser.searchForServices(ofType: HTTPS, inDomain: DOMAIN)
+        domainBrowser.searchForBrowsableDomains()
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: {
             self.refreshControl?.endRefreshing()
         })
@@ -89,20 +73,32 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     // MARK: - Table View
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return domains.count > 1 ? domains.count : 1
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return section < domains.count ? domains[section] : ""
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return services.count > 0 ? services.count : 1
+        if domains.count > section {
+            return services[domains[section]]!.count >= 0 ? services[domains[section]]!.count : 0
+        }
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
-        if services.count > 0 {
-            let service = services[urls[indexPath.row]]
-            cell.textLabel!.text = service?.name
-            cell.detailTextLabel!.text = urls[indexPath.row].absoluteString
+        if domains.count > 0,
+            urls.count > 0,
+            let domain = services[domains[indexPath.section]],
+            domain.count > 0,
+            urls[domains[indexPath.section]] != nil,
+            let url = urls[domains[indexPath.section]]?[indexPath.row],
+            let service = domain[url] {
+            cell.textLabel!.text = service.name
+            cell.detailTextLabel!.text = url.absoluteString
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         } else {
             cell.textLabel!.text = NSLocalizedString("NO_SITES_CELL_TITLE", comment: "Cell title with no sites")
@@ -132,10 +128,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (services.count == 0) {
+        if services[domains[indexPath.section]] == nil || services[domains[indexPath.section]]?.count == 0 {
             tableView.deselectRow(at: indexPath, animated: true)
         } else {
-            let url = urls[indexPath.row]
+            let url = urls[domains[indexPath.section]]![indexPath.row]
             let controller = SFSafariViewController.init(url: url)
             present(controller, animated: true)
         }
@@ -144,47 +140,47 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     // MARK: - NetServices Browser
 
     func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
-        if browser === httpBrowser {
+        if httpBrowsers.contains(browser) {
             print("Searching for HTTP services...")
-            httpSearching = true
+            httpSearching += 1
         }
-        if browser === httpsBrowser {
+        if httpsBrowsers.contains(browser) {
             print("Searching for HTTPS services...")
-            httpsSearching = true
+            httpsSearching += 1
         }
     }
 
     func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
-        if browser === httpBrowser {
+        if httpBrowsers.contains(browser) {
             print("Stopped searching for HTTP services.")
-            httpSearching = false
-            if !httpsSearching {
+            httpSearching -= 1
+            if !(httpsSearching > 0) {
                 refreshControl?.endRefreshing()
             }
         }
-        if browser === httpsBrowser {
+        if httpsBrowsers.contains(browser) {
             print("Stopped searching for HTTPS services.")
-            httpsSearching = false
-            if !httpSearching {
+            httpsSearching -= 1
+            if !(httpSearching > 0) {
                 refreshControl?.endRefreshing()
             }
         }
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String : NSNumber]) {
-        if browser === httpBrowser {
+        if httpBrowsers.contains(browser) {
             print("Something went wrong searching for HTTP services...")
             print(errorDict.description)
-            httpSearching = false
-            if !httpsSearching {
+            httpSearching -= 1
+            if !(httpsSearching > 0) {
                 refreshControl?.endRefreshing()
             }
         }
-        if browser === httpsBrowser {
+        if httpsBrowsers.contains(browser) {
             print("Something went wrong searching for HTTPS services...")
             print(errorDict.description)
-            httpsSearching = false
-            if !httpSearching {
+            httpsSearching -= 1
+            if !(httpSearching > 0) {
                 refreshControl?.endRefreshing()
             }
         }
@@ -196,6 +192,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             service.delegate = self
             pendingServices.append(service)
             service.resolve(withTimeout: 10)
+            domains.append(service.domain)
+            domains.sort()
         } else {
             self.netServiceDidResolveAddress(service)
         }
@@ -207,18 +205,52 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
         print("Removing NetService \"\(service.name)\"...")
         if let key = url(service) {
-            services.removeValue(forKey: key)
-            urls.remove(at: urls.index(of: key)!)
+            services[service.domain]?.removeValue(forKey: key)
+            urls[service.domain]?.remove(at: (urls[service.domain]?.index(of: key)!)!)
+            if (service.domain != LOCAL_DOMAIN) && (services[service.domain] != nil) && ((services[service.domain]?.count)! < 1) {
+                domains.remove(at: domains.index(of: service.domain)!)
+            }
         } else {
             // reset and start over
             services.removeAll()
             urls.removeAll()
-            if !httpSearching {
+            if !(httpSearching > 0) {
                 browser.searchForServices(ofType: HTTP, inDomain: DOMAIN)
             }
-            if !httpsSearching {
+            if !(httpsSearching > 0) {
                 browser.searchForServices(ofType: HTTPS, inDomain: DOMAIN)
             }
+        }
+        if !moreComing {
+            self.tableView.reloadData()
+        }
+    }
+
+    func netServiceBrowser(_ browser: NetServiceBrowser, didFindDomain domainString: String, moreComing: Bool) {
+        print("Adding domain \"\(domainString)\"...")
+        if !domains.contains(domainString) {
+            let httpBrowser = NetServiceBrowser()
+            let httpsBrowser = NetServiceBrowser()
+            httpBrowser.delegate = self
+            httpsBrowser.delegate = self
+            httpBrowsers.append(httpBrowser)
+            httpsBrowsers.append(httpsBrowser)
+            services[domainString] = [URL: NetService]()
+            urls[domainString] = [URL]()
+            httpBrowser.searchForServices(ofType: HTTP, inDomain: domainString)
+            httpsBrowser.searchForServices(ofType: HTTPS, inDomain: domainString)
+        }
+        if !moreComing {
+            self.tableView.reloadData()
+        }
+    }
+
+    func netServiceBrowser(_ browser: NetServiceBrowser, didRemoveDomain domainString: String, moreComing: Bool) {
+        print("Removing domain \"\(domainString)\"...")
+        if domains.contains(domainString) {
+            domains.remove(at: domains.index(of: domainString)!)
+            services.remove(at: services.index(forKey: domainString)!)
+            urls.remove(at: urls.index(forKey: domainString)!)
         }
         if !moreComing {
             self.tableView.reloadData()
@@ -231,8 +263,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         print("Resolved NetService...")
         pendingServices.remove(at: pendingServices.index(of: service)!)
         if let key = url(service) {
-            urls.append(key)
-            services[key] = service
+            urls[service.domain]?.append(key)
+            services[service.domain]?[key] = service
             self.tableView.reloadData()
         }
     }
