@@ -114,7 +114,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        if services.count > 0 {
+        if domains.count > 0 {
             // open sheet with details that allows site to be opened?
         } else {
             let network = getSSID()
