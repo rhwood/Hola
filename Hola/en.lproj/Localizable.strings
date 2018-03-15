@@ -6,6 +6,9 @@
   Copyright © 2018 Alexandria Software. All rights reserved.
 */
 
+/* title if showing multiple or zero domains */
+"VIEW_TITLE" = "Sites";
+
 /* list of sites in non-default domain - replacement is domain */
 "DOMAIN_SITES" = "%@ Sites";
 

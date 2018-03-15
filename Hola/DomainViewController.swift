@@ -26,6 +26,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     let DEFAULT_DOMAIN = "" // use default instead of "local."
     let LOCAL_DOMAIN = "local." // the local domain, handled as "" in app
 
+    // MARK: - View
+
     override func viewDidLoad() {
         super.viewDidLoad()
         domainBrowser = NetServiceBrowser()
@@ -72,6 +74,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         self.tableView.reloadData()
     }
 
+    func setTitle() {
+        title = domains.count != 1 ? NSLocalizedString("VIEW_TITLE", comment: "title if showing multiple or zero domains") : self.getTitle(domains[0])
+    }
+
     // MARK: - Table View
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -79,7 +85,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return section < domains.count ? domains[section] : ""
+        if section < domains.count && domains.count > 1 {
+            return self.getTitle(domains[section])
+        }
+        return ""
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -194,13 +203,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
-        print("\(Date().debugDescription) Found NetService \"\(service.name)\"...")
+        print("\(Date().debugDescription) Found NetService \"\(service.name)\" in \"\(service.domain)\"...")
+        service.delegate = self
         if service.port == -1 {
-            service.delegate = self
             pendingServices.append(service)
             service.resolve(withTimeout: 10)
-            domains.append(service.domain)
-            domains.sort()
         } else {
             self.netServiceDidResolveAddress(service)
         }
@@ -210,12 +217,13 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        print("\(Date().debugDescription) Removing NetService \"\(service.name)\"...")
+        print("\(Date().debugDescription) Removing NetService \"\(service.name)\" from \"\(service.domain)\"...")
         if let key = url(service) {
             services[service.domain]?.removeValue(forKey: key)
             urls[service.domain]?.remove(at: (urls[service.domain]?.index(of: key)!)!)
             if (service.domain != LOCAL_DOMAIN) && (services[service.domain] != nil) && ((services[service.domain]?.count)! < 1) {
                 domains.remove(at: domains.index(of: service.domain)!)
+                setTitle()
             }
         } else {
             // reset and start over
@@ -263,6 +271,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             if httpsBrowsers.keys.contains(domainString) {
                 httpsBrowsers.remove(at: httpsBrowsers.index(forKey: domainString)!)
             }
+            self.setTitle()
         }
         if !moreComing {
             self.endRefreshing()
@@ -272,8 +281,13 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     // MARK: - NetService
 
     func netServiceDidResolveAddress(_ service: NetService) {
-        print("\(Date().debugDescription) Resolved NetService...")
+        print("\(Date().debugDescription) Resolved NetService \"\(service.name)\" in \"\(service.domain)\"...")
         pendingServices.remove(at: pendingServices.index(of: service)!)
+        if !domains.contains(service.domain) {
+            domains.append(service.domain)
+            domains.sort()
+            setTitle()
+        }
         if let key = url(service) {
             urls[service.domain]?.append(key)
             services[service.domain]?[key] = service
@@ -290,6 +304,16 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             return URL(string:"\(p)://\(hostName):\(service.port)")!
         }
         return nil
+    }
+
+    // MARK: - Utilities
+
+    func getTitle(_ domain: String) -> String {
+        if domain == LOCAL_DOMAIN {
+            return NSLocalizedString("LOCAL_SITES", comment: "list of sites in default (local) domain")
+        } else {
+            return String.localizedStringWithFormat(NSLocalizedString("DOMAIN_SITES", comment: "list of sites in non-default domain - replacement is domain"), domain)
+        }
     }
 
     func getSSID() -> String? {
