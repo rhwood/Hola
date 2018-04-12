@@ -55,7 +55,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         services.removeAll()
     }
 
-    @IBAction func refresh(_ sender: UIBarButtonItem) {
+    @IBAction func refresh() {
         self.refreshControl?.beginRefreshing()
         for domain in domains {
             self.netServiceBrowser(domainBrowser, didRemoveDomain: domain, moreComing: true)
@@ -76,6 +76,12 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     func setTitle() {
         title = domains.count != 1 ? NSLocalizedString("VIEW_TITLE", comment: "title if showing multiple or zero domains") : self.getTitle(domains[0])
+    }
+
+    // MARK: - Segues
+
+    @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
+        self.refresh()
     }
 
     // MARK: - Table View
@@ -149,6 +155,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         } else {
             let url = urls[domains[indexPath.section]]![indexPath.row]
             let controller = SFSafariViewController.init(url: url)
+            if #available(iOS 10.0, *) {
+                controller.preferredControlTintColor = self.view.tintColor
+            }
             present(controller, animated: true)
         }
     }
