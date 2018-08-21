@@ -8,9 +8,9 @@
 /* Class = "UILabel"; text = "Subtitle"; ObjectID = "Jz0-zv-Ckb"; */
 "Jz0-zv-Ckb.text" = "Subtitle";
 
-/* Class = "UINavigationController"; title = "Sites"; ObjectID = "RMx-3f-FxP"; */
-"RMx-3f-FxP.title" = "Sites";
+/* Class = "UINavigationController"; title = "Services"; ObjectID = "RMx-3f-FxP"; */
+"RMx-3f-FxP.title" = "Services";
 
-/* Class = "UINavigationItem"; title = "Sites"; ObjectID = "Zdf-7t-Un8"; */
-"Zdf-7t-Un8.title" = "Sites";
+/* Class = "UINavigationItem"; title = "Services"; ObjectID = "Zdf-7t-Un8"; */
+"Zdf-7t-Un8.title" = "Services";
 

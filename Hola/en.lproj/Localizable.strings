@@ -7,27 +7,27 @@
 */
 
 /* title if showing multiple or zero domains */
-"VIEW_TITLE" = "Sites";
+"VIEW_TITLE" = "Services";
 
-/* list of sites in non-default domain - replacement is domain */
-"DOMAIN_SITES" = "%@ Sites";
+/* list of services in non-default domain - replacement is domain */
+"DOMAIN_SERVICES" = "%@ Services";
 
-/* list of sites in default (local) domain */
-"LOCAL_SITES" = "Local Sites";
+/* list of services in default (local) domain */
+"LOCAL_SERVICES" = "Local Services";
 
-/* Cell title with no sites */
-"NO_SITES_CELL_TITLE" = "No sites found";
+/* Cell title with no services */
+"NO_SERVICES_CELL_TITLE" = "No services found";
 
-/* Cell details with no sites */
-"NO_SITES_CELL_DETAIL" = "Are expected sites running?";
+/* Cell details with no services */
+"NO_SERVICES_CELL_DETAIL" = "Are expected services running?";
 
-/* No sites found alert OK action */
-"NO_SITES_ALERT_OK_ACTION" = "OK";
+/* No services found alert OK action */
+"NO_SERVICES_ALERT_OK_ACTION" = "OK";
 
-/* No sites found alert title */
-"NO_SITES_ALERT_TITLE" = "No Sites Found";
+/* No services found alert title */
+"NO_SERVICES_ALERT_TITLE" = "No Services Found";
 
-/* No sites found alert message - replacement is network name */
-"NO_SITES_ALERT_MESSAGE" = "Unable to find sites on %@.
+/* No services found alert message - replacement is network name */
+"NO_SERVICES_ALERT_MESSAGE" = "Unable to find services on %@.
 
-Ensure you are on the desired network and expected sites, applications, or devices are running.";
+Ensure you are on the desired network and expected services, applications, or devices are running.";

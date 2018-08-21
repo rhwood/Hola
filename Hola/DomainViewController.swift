@@ -121,8 +121,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             cell.detailTextLabel!.text = url.absoluteString
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         } else {
-            cell.textLabel!.text = NSLocalizedString("NO_SITES_CELL_TITLE", comment: "Cell title with no sites")
-            cell.detailTextLabel!.text = NSLocalizedString("NO_SITES_CELL_DETAIL", comment: "Cell details with no sites")
+            cell.textLabel!.text = NSLocalizedString("NO_SERVICES_CELL_TITLE", comment: "Cell title with no services")
+            cell.detailTextLabel!.text = NSLocalizedString("NO_SERVICES_CELL_DETAIL", comment: "Cell details with no services")
             cell.accessoryType = UITableViewCellAccessoryType.detailButton
         }
         return cell
@@ -134,10 +134,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         } else {
             let network = getSSID()
             let message = NSString.localizedStringWithFormat(
-                NSLocalizedString("NO_SITES_ALERT_MESSAGE", comment:"No sites found alert message - replacement is network name") as NSString
+                NSLocalizedString("NO_SERVICES_ALERT_MESSAGE", comment:"No services found alert message - replacement is network name") as NSString
                 , network ?? "this network") as String
-            let alert = UIAlertController(title: NSLocalizedString("NO_SITES_ALERT_TITLE", comment: "No sites found alert title"), message: message, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("NO_SITES_ALERT_OK_ACTION", comment: "No sites found alert OK action"), style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: NSLocalizedString("NO_SERVICES_ALERT_TITLE", comment: "No services found alert title"), message: message, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("NO_SERVICES_ALERT_OK_ACTION", comment: "No services found alert OK action"), style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -319,9 +319,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     func getTitle(_ domain: String) -> String {
         if domain == LOCAL_DOMAIN {
-            return NSLocalizedString("LOCAL_SITES", comment: "list of sites in default (local) domain")
+            return NSLocalizedString("LOCAL_SERVICES", comment: "list of services in default (local) domain")
         } else {
-            return String.localizedStringWithFormat(NSLocalizedString("DOMAIN_SITES", comment: "list of sites in non-default domain - replacement is domain"), domain)
+            return String.localizedStringWithFormat(NSLocalizedString("DOMAIN_SERVICES", comment: "list of services in non-default domain - replacement is domain"), domain)
         }
     }
 
