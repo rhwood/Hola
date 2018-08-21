@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -120,9 +119,6 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="A9l-UJ-bB0" kind="show" id="Rj6-EH-jv5"/>
-                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="Iel-cH-vQt" detailTextLabel="AVo-Gz-2f5" style="IBUITableViewCellStyleValue1" id="qRE-un-Haj">
                                         <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
@@ -164,6 +160,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="privacyPolicyCell" destination="D5X-DM-mXc" id="hDb-8M-Z8E"/>
                         <outlet property="versionLabel" destination="AVo-Gz-2f5" id="NIA-C7-eDg"/>
                     </connections>
                 </tableViewController>
@@ -171,45 +168,6 @@
                 <exit id="Isy-Mx-DF3" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2300" y="-630"/>
-        </scene>
-        <!--Delegate-->
-        <scene sceneID="rdA-rL-vKX">
-            <objects>
-                <viewController title="Privacy Policy" id="A9l-UJ-bB0" customClass="PrivacyPolicyViewController" customModule="Hola" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Icz-48-yJI"/>
-                        <viewControllerLayoutGuide type="bottom" id="BzR-vg-9G0"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="d2P-Xm-yeP" customClass="UIWebView">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <connections>
-                            <outlet property="delegate" destination="A9l-UJ-bB0" id="Yvy-Yq-cYD"/>
-                        </connections>
-                    </view>
-                    <navigationItem key="navigationItem" title="Privacy Policy" id="kzH-qW-dSV">
-                        <rightBarButtonItems>
-                            <barButtonItem style="done" systemItem="done" id="v7e-Ro-Zvj">
-                                <connections>
-                                    <segue destination="LGy-BJ-M29" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="rbP-Fs-JNR"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="action" id="pUN-MF-BlC">
-                                <connections>
-                                    <action selector="activty:" destination="A9l-UJ-bB0" id="P7b-wN-R0h"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="webView" destination="d2P-Xm-yeP" id="PTc-qo-z6h"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Slg-Yt-dgg" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="LGy-BJ-M29" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="3072.8000000000002" y="-630.13493253373315"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="VKD-xe-Jjf">

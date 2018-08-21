@@ -8,10 +8,12 @@
 
 import Foundation
 import UIKit
+import SafariServices
 
 class SettingsViewController: UITableViewController {
     
     @IBOutlet weak var showEmptySwitch: UISwitch!
+    @IBOutlet weak var privacyPolicyCell: UITableViewCell!
     @IBOutlet weak var versionLabel: UILabel!
 
     override func viewDidLoad() {
@@ -28,4 +30,19 @@ class SettingsViewController: UITableViewController {
     @IBAction func showEmpty(_ sender: UISwitch) {
         UserDefaults.standard.set(sender.isOn, forKey: "showEmptyDomains")
     }
+    
+    // MARK: - Table View
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (tableView.cellForRow(at: indexPath) == privacyPolicyCell) {
+            // bitly-based redirection to policy
+            let url = URL(string: "https://axsw.co/2cBJtzZ")!
+            let controller = SFSafariViewController.init(url: url)
+            if #available(iOS 10.0, *) {
+                controller.preferredControlTintColor = self.view.tintColor
+            }
+            present(controller, animated: true)
+        }
+    }
+
 }
