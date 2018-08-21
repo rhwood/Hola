@@ -31,3 +31,15 @@
 "NO_SERVICES_ALERT_MESSAGE" = "Unable to find services on %@.
 
 Ensure you are on the desired network and expected services, applications, or devices are running.";
+
+/* Alert title with no email */
+"NO_EMAIL_TITLE" = "Unable to Send Email";
+
+/* Alert message with no email */
+"NO_EMAIL_MESSAGE" = "This %@ does not appear to be configured to send email.
+
+Please contact us using a different device or computer.";
+
+/* Default action */
+"OK" = "OK";
+

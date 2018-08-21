@@ -8,18 +8,21 @@
 
 import Foundation
 import UIKit
+import MessageUI
 import SafariServices
 
-class SettingsViewController: UITableViewController {
-    
+class SettingsViewController: UITableViewController, MFMailComposeViewControllerDelegate {
+
+    let shortVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
+    let longVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
+
     @IBOutlet weak var showEmptySwitch: UISwitch!
+    @IBOutlet weak var emailCell: UITableViewCell!
     @IBOutlet weak var privacyPolicyCell: UITableViewCell!
     @IBOutlet weak var versionLabel: UILabel!
 
     override func viewDidLoad() {
         if let version = self.versionLabel {
-            let shortVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
-            let longVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
             version.text = "\(shortVersion) (\(longVersion))"
         }
         if let showEmptySwitch = self.showEmptySwitch {
@@ -34,7 +37,29 @@ class SettingsViewController: UITableViewController {
     // MARK: - Table View
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (tableView.cellForRow(at: indexPath) == privacyPolicyCell) {
+        switch tableView.cellForRow(at: indexPath) {
+        case emailCell:
+            if (!MFMailComposeViewController.canSendMail()) {
+                let alert = UIAlertController(
+                    title: NSLocalizedString("NO_EMAIL_TITLE", comment: "Alert title with no email"),
+                    message: NSString.localizedStringWithFormat(NSLocalizedString("NO_EMAIL_MESSAGE", comment: "Alert message with no email") as NSString, UIDevice.current.model) as String,
+                    preferredStyle: .alert)
+                alert.addAction(UIAlertAction(
+                    title: NSLocalizedString("OK", comment: "Default action"),
+                    style: .default,
+                    handler: {_ in
+                        // do nothing
+                }))
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
+            let controller = MFMailComposeViewController()
+            controller.mailComposeDelegate = self
+            controller.setToRecipients(["support@alexandriasoftware.com"])
+            controller.setSubject("Hola! (\(shortVersion) (\(longVersion))) Feedback")
+            present(controller, animated: true)
+            break
+        case privacyPolicyCell:
             // bitly-based redirection to policy
             let url = URL(string: "https://axsw.co/2cBJtzZ")!
             let controller = SFSafariViewController.init(url: url)
@@ -42,7 +67,20 @@ class SettingsViewController: UITableViewController {
                 controller.preferredControlTintColor = self.view.tintColor
             }
             present(controller, animated: true)
+            break
+        default:
+            // nothing to do
+            break
         }
+    }
+    
+    // MARK: - Mail Delegate
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        // Check the result or perform other tasks.
+        
+        // Dismiss the mail compose view controller.
+        controller.dismiss(animated: true, completion: nil)
     }
 
 }
