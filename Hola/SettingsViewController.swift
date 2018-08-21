@@ -60,8 +60,7 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
             present(controller, animated: true)
             break
         case privacyPolicyCell:
-            // bitly-based redirection to policy
-            let url = URL(string: "https://axsw.co/2cBJtzZ")!
+            let url = URL(string: NSLocalizedString("PRIVACY_POLICY_URL", comment: "Privacy policy URL"))!
             let controller = SFSafariViewController.init(url: url)
             if #available(iOS 10.0, *) {
                 controller.preferredControlTintColor = self.view.tintColor

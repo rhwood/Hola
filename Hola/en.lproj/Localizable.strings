@@ -43,3 +43,5 @@ Please contact us using a different device or computer.";
 /* Default action */
 "OK" = "OK";
 
+/* Privacy policy URL */
+"PRIVACY_POLICY_URL" = "https://www.iubenda.com/privacy-policy/77724957";
