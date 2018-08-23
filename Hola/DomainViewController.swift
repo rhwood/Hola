@@ -22,6 +22,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     var domains = [String]()
     var urls = [String: [URL]]()
     let HTTP = "_http._tcp."
+    // search for HTTPS even though not recommended
+    // see https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?search=https
+    // and scroll to Tim Berners Lee's comments on the HTTPS entry without associated port
     let HTTPS = "_https._tcp."
     let DEFAULT_DOMAIN = "" // use default instead of "local."
     let LOCAL_DOMAIN = "local." // the local domain, handled as "" in app
@@ -235,10 +238,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
                 setTitle()
             }
         } else {
+            print("\(Date().debugDescription) Unknown NetService \"\(service.name)\" on host \"\(service.hostName ?? "no hostname")\" from \"\(service.domain)\"...")
             // reset and start over
             services.removeAll()
             urls.removeAll()
-            domainBrowser.searchForBrowsableDomains()
+            self.refresh()
         }
         if !moreComing {
             self.endRefreshing()
@@ -272,14 +276,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         print("\(Date().debugDescription) Removing domain \"\(domainString)\"...")
         if domains.contains(domainString) {
             domains.remove(at: domains.index(of: domainString)!)
-            services.remove(at: services.index(forKey: domainString)!)
-            urls.remove(at: urls.index(forKey: domainString)!)
-            if httpBrowsers.keys.contains(domainString) {
-                httpBrowsers.remove(at: httpBrowsers.index(forKey: domainString)!)
-            }
-            if httpsBrowsers.keys.contains(domainString) {
-                httpsBrowsers.remove(at: httpsBrowsers.index(forKey: domainString)!)
-            }
+            services.removeValue(forKey: domainString)
+            urls.removeValue(forKey: domainString)
+            httpBrowsers.removeValue(forKey: domainString)
+            httpsBrowsers.removeValue(forKey: domainString)
             self.setTitle()
         }
         if !moreComing {
