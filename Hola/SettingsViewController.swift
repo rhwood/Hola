@@ -57,6 +57,7 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
             controller.mailComposeDelegate = self
             controller.setToRecipients(["support@alexandriasoftware.com"])
             controller.setSubject("Hola! (\(shortVersion) (\(longVersion))) Feedback")
+            controller.navigationBar.tintColor = self.view.tintColor
             present(controller, animated: true)
             break
         case privacyPolicyCell:
