@@ -310,7 +310,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             p = "https"
         }
         if let hostName = service.hostName {
-            return URL(string:"\(p)://\(hostName):\(service.port)")!
+            let dict = NetService.dictionary(fromTXTRecord: service.txtRecordData()!)
+            let path = dict.keys.contains("path") ? String(data: dict["path"]!, encoding: .utf8) : ""
+            return URL(string:"\(p)://\(hostName):\(service.port)\(path ?? "")")!
         }
         return nil
     }
