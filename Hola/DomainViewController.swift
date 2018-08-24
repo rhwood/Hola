@@ -237,6 +237,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
                 domains.remove(at: domains.index(of: service.domain)!)
                 setTitle()
             }
+            self.tableView.reloadData()
         } else {
             print("\(Date().debugDescription) Unknown NetService \"\(service.name)\" on host \"\(service.hostName ?? "no hostname")\" from \"\(service.domain)\"...")
             // reset and start over
@@ -305,11 +306,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     func url(_ service: NetService) -> URL? {
-        var p = "http"
-        if service.type == HTTPS {
-            p = "https"
-        }
         if let hostName = service.hostName {
+            // "protocol" is a reserved word, so simply use "p"
+            let p = service.type == HTTPS ? "https" : "http"
             let dict = NetService.dictionary(fromTXTRecord: service.txtRecordData()!)
             let path = dict.keys.contains("path") ? String(data: dict["path"]!, encoding: .utf8) : ""
             return URL(string:"\(p)://\(hostName):\(service.port)\(path ?? "")")!
