@@ -18,9 +18,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     var httpSearching = 0
     var httpsSearching = 0
     var pendingServices = [NetService]()
-    var services = [String: [URL: NetService]]()
-    var domains = [String]()
-    var urls = [String: [URL]]()
+    var services = [String: [String: NetService]]() // [service.domain: [serviceKey(): service]]
+    var domains = [String]() // [service.domain]
+    var serviceKeys = [String: [String]]() // [service.domain: [serviceKey()]]
+    var urls = [String: URL]() // [serviceKey(): url()]
     let HTTP = "_http._tcp."
     // search for HTTPS even though not recommended
     // see https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?search=https
@@ -112,14 +113,15 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-
         if domains.count > 0,
             urls.count > 0,
-            let domain = services[domains[indexPath.section]],
+            let domainKey = domains[indexPath.section] as String?,
+            let domain = services[domainKey],
             domain.count > 0,
-            urls[domains[indexPath.section]] != nil,
-            let url = urls[domains[indexPath.section]]?[indexPath.row],
-            let service = domain[url] {
+            serviceKeys[domainKey] != nil,
+            let serviceKey = serviceKeys[domainKey]?[indexPath.row],
+            let url = urls[serviceKey],
+            let service = domain[serviceKey] {
             cell.textLabel!.text = service.name
             cell.detailTextLabel!.text = url.absoluteString
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
@@ -156,12 +158,14 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             services[domains[indexPath.section]]?.count == 0 {
             tableView.deselectRow(at: indexPath, animated: true)
         } else {
-            let url = urls[domains[indexPath.section]]![indexPath.row]
-            let controller = SFSafariViewController.init(url: url)
-            if #available(iOS 10.0, *) {
-                controller.preferredControlTintColor = self.view.tintColor
+            if let key = serviceKeys[domains[indexPath.section]]?[indexPath.row],
+                let url = urls[key] {
+                let controller = SFSafariViewController.init(url: url)
+                if #available(iOS 10.0, *) {
+                    controller.preferredControlTintColor = self.view.tintColor
+                }
+                present(controller, animated: true)
             }
-            present(controller, animated: true)
         }
     }
 
@@ -230,9 +234,12 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
         print("\(Date().debugDescription) Removing NetService \"\(service.name)\" from \"\(service.domain)\"...")
-        if let key = url(service) {
+        if let key = serviceKey(service) {
             services[service.domain]?.removeValue(forKey: key)
-            urls[service.domain]?.remove(at: (urls[service.domain]?.index(of: key)!)!)
+            if let index = serviceKeys[service.domain]?.index(of: key) {
+                serviceKeys[service.domain]?.remove(at: index)
+            }
+            urls.removeValue(forKey: key)
             if (service.domain != LOCAL_DOMAIN) && (services[service.domain] != nil) && ((services[service.domain]?.count)! < 1) {
                 domains.remove(at: domains.index(of: service.domain)!)
                 setTitle()
@@ -253,8 +260,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     func netServiceBrowser(_ browser: NetServiceBrowser, didFindDomain domainString: String, moreComing: Bool) {
         print("\(Date().debugDescription) Adding domain \"\(domainString)\"...")
         if !domains.contains(domainString) {
-            services[domainString] = [URL: NetService]()
-            urls[domainString] = [URL]()
+            services[domainString] = [String: NetService]()
+            serviceKeys[domainString] = [String]()
         }
         if !httpBrowsers.keys.contains(domainString) {
             let httpBrowser = NetServiceBrowser()
@@ -278,6 +285,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         if domains.contains(domainString) {
             domains.remove(at: domains.index(of: domainString)!)
             services.removeValue(forKey: domainString)
+            serviceKeys.removeValue(forKey: domainString)
             urls.removeValue(forKey: domainString)
             httpBrowsers.removeValue(forKey: domainString)
             httpsBrowsers.removeValue(forKey: domainString)
@@ -298,13 +306,21 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             domains.sort()
             setTitle()
         }
-        if let key = url(service) {
-            urls[service.domain]?.append(key)
+        if let key = serviceKey(service), let url = url(service) {
+            serviceKeys[service.domain]?.append(key)
+            urls[key] = url
             services[service.domain]?[key] = service
+            serviceKeys[service.domain]?.sort()
             self.endRefreshing()
         }
     }
 
+    /// Create the URL for a given service. Note that URLs are mutable within the lifetime of a
+    /// service, so they are only usable to navigating to that service, not for (re)identifying a
+    /// unique service; use `serviceKey(_ service: NetService)` for that.
+    ///
+    /// - Parameter service: The service to get a URL for
+    /// - Returns: the URL for the service
     func url(_ service: NetService) -> URL? {
         if let hostName = service.hostName {
             // "protocol" is a reserved word, so simply use "p"
@@ -316,6 +332,15 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         return nil
     }
 
+    /// Create the service unique key for a given service, since service URLs can change,
+    /// but service names and domains are immutable within the lifetime of a service in Bonjour
+    ///
+    /// - Parameter service: The service to get a key for
+    /// - Returns: the key for the service
+    func serviceKey(_ service: NetService) -> String? {
+        return "\(service.name).\(service.domain)"
+    }
+    
     // MARK: - Utilities
 
     func getTitle(_ domain: String) -> String {
