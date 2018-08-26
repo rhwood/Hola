@@ -13,10 +13,8 @@ import SystemConfiguration.CaptiveNetwork
 class DomainViewController: UITableViewController, NetServiceBrowserDelegate, NetServiceDelegate {
 
     var domainBrowser: NetServiceBrowser!
-    var httpBrowsers = [String: NetServiceBrowser]()
-    var httpsBrowsers = [String: NetServiceBrowser]()
-    var httpSearching = 0
-    var httpsSearching = 0
+    var typeBrowsers = [String: [String: NetServiceBrowser]]()
+    var searching = 0
     var pendingServices = [NetService]()
     var services = [String: [String: NetService]]() // [service.domain: [serviceKey(): service]]
     var domains = [String]() // [service.domain]
@@ -45,11 +43,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     override func viewDidDisappear(_ animated: Bool) {
         domainBrowser.stop();
-        for httpBrowser in httpBrowsers {
-            httpBrowser.value.stop()
-        }
-        for httpsBrowser in httpsBrowsers {
-            httpsBrowser.value.stop()
+        for domain in typeBrowsers {
+            for browser in domain.value {
+                browser.value.stop()
+            }
         }
         super.viewDidDisappear(animated)
     }
@@ -172,48 +169,41 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     // MARK: - NetServices Browser
 
     func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
-        if httpBrowsers.values.contains(browser) {
-            print("\(Date().debugDescription) Searching for HTTP services...")
-            httpSearching += 1
-        }
-        if httpsBrowsers.values.contains(browser) {
-            print("\(Date().debugDescription) Searching for HTTPS services...")
-            httpsSearching += 1
+        for domain in typeBrowsers {
+            for type in domain.value {
+                if  type.value == browser {
+                    print("\(Date().debugDescription) Searching for \(type.key) services in \(domain.key)...")
+                    searching += 1
+                }
+            }
         }
     }
 
     func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
-        if httpBrowsers.values.contains(browser) {
-            print("\(Date().debugDescription) Stopped searching for HTTP services.")
-            httpSearching -= 1
-            if !(httpsSearching > 0) {
-                self.endRefreshing()
-            }
-        }
-        if httpsBrowsers.values.contains(browser) {
-            print("\(Date().debugDescription) Stopped searching for HTTPS services.")
-            httpsSearching -= 1
-            if !(httpSearching > 0) {
-                self.endRefreshing()
+        for domain in typeBrowsers {
+            for type in domain.value {
+                if type.value == browser {
+                    print("\(Date().debugDescription) Stopped searching for \(type.key) services in \(domain.key)...")
+                    searching -= 1
+                    if !(searching > 0) {
+                        self.endRefreshing()
+                    }
+                }
             }
         }
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String : NSNumber]) {
-        if httpBrowsers.values.contains(browser) {
-            print("\(Date().debugDescription) Something went wrong searching for HTTP services...")
-            print(errorDict.description)
-            httpSearching -= 1
-            if !(httpsSearching > 0) {
-                self.endRefreshing()
-            }
-        }
-        if httpsBrowsers.values.contains(browser) {
-            print("\(Date().debugDescription) Something went wrong searching for HTTPS services...")
-            print(errorDict.description)
-            httpsSearching -= 1
-            if !(httpSearching > 0) {
-                self.endRefreshing()
+        for domain in typeBrowsers {
+            for type in domain.value {
+                if type.value == browser {
+                    print("\(Date().debugDescription) Something went wrong searching for \(type.key) services in \(domain.key)...")
+                    print(errorDict.description)
+                    searching -= 1
+                    if !(searching > 0) {
+                        self.endRefreshing()
+                    }
+                }
             }
         }
     }
@@ -263,16 +253,19 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             services[domainString] = [String: NetService]()
             serviceKeys[domainString] = [String]()
         }
-        if !httpBrowsers.keys.contains(domainString) {
+        if !typeBrowsers.keys.contains(domainString) {
+            typeBrowsers[domainString] = [String: NetServiceBrowser]()
+        }
+        if typeBrowsers[domainString]![HTTP] == nil {
             let httpBrowser = NetServiceBrowser()
             httpBrowser.delegate = self
-            httpBrowsers[domainString] = httpBrowser
+            typeBrowsers[domainString]![HTTP] = httpBrowser
             httpBrowser.searchForServices(ofType: HTTP, inDomain: domainString)
         }
-        if !httpsBrowsers.keys.contains(domainString) {
+        if typeBrowsers[domainString]![HTTPS] == nil {
             let httpsBrowser = NetServiceBrowser()
             httpsBrowser.delegate = self
-            httpsBrowsers[domainString] = httpsBrowser
+            typeBrowsers[domainString]![HTTPS] = httpsBrowser
             httpsBrowser.searchForServices(ofType: HTTPS, inDomain: domainString)
         }
         if !moreComing {
@@ -287,8 +280,12 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             services.removeValue(forKey: domainString)
             serviceKeys.removeValue(forKey: domainString)
             urls.removeValue(forKey: domainString)
-            httpBrowsers.removeValue(forKey: domainString)
-            httpsBrowsers.removeValue(forKey: domainString)
+            if typeBrowsers.keys.contains(domainString) {
+                for browsers in typeBrowsers[domainString]! {
+                    browsers.value.stop()
+                }
+            }
+            typeBrowsers.removeValue(forKey: domainString)
             self.setTitle()
         }
         if !moreComing {
