@@ -13,6 +13,7 @@ import SystemConfiguration.CaptiveNetwork
 class DomainViewController: UITableViewController, NetServiceBrowserDelegate, NetServiceDelegate {
 
     var domainBrowser: NetServiceBrowser!
+    var servicesBrowsers = [String: NetServiceBrowser]()
     var typeBrowsers = [String: [String: NetServiceBrowser]]()
     var searching = 0
     var pendingServices = [NetService]()
@@ -20,11 +21,13 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     var domains = [String]() // [service.domain]
     var serviceKeys = [String: [String]]() // [service.domain: [serviceKey()]]
     var urls = [String: URL]() // [serviceKey(): url()]
+    let SERVICES = "_services._dns-sd._udp."
     let HTTP = "_http._tcp."
     // search for HTTPS even though not recommended
     // see https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?search=https
     // and scroll to Tim Berners Lee's comments on the HTTPS entry without associated port
     let HTTPS = "_https._tcp."
+    let DOMAIN_ROOT = "." // returned as domain for any types returned when searching for SERVICES
     let DEFAULT_DOMAIN = "" // use default instead of "local."
     let LOCAL_DOMAIN = "local." // the local domain, handled as "" in app
 
@@ -172,7 +175,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         for domain in typeBrowsers {
             for type in domain.value {
                 if  type.value == browser {
-                    print("\(Date().debugDescription) Searching for \(type.key) services in \(domain.key)...")
+                    print("\(Date().debugDescription) Searching for \"\(type.key)\" services in \"\(domain.key)\"...")
                     searching += 1
                 }
             }
@@ -183,7 +186,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         for domain in typeBrowsers {
             for type in domain.value {
                 if type.value == browser {
-                    print("\(Date().debugDescription) Stopped searching for \(type.key) services in \(domain.key)...")
+                    print("\(Date().debugDescription) Stopped searching for \"\(type.key)\" services in \"\(domain.key)\"...")
                     searching -= 1
                     if !(searching > 0) {
                         self.endRefreshing()
@@ -197,8 +200,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         for domain in typeBrowsers {
             for type in domain.value {
                 if type.value == browser {
-                    print("\(Date().debugDescription) Something went wrong searching for \(type.key) services in \(domain.key)...")
-                    print(errorDict.description)
+                    print("\(Date().debugDescription) Error searching for \"\(type.key)\" services in \"\(domain.key)\":\n\(errorDict.description)")
                     searching -= 1
                     if !(searching > 0) {
                         self.endRefreshing()
@@ -210,12 +212,14 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
         print("\(Date().debugDescription) Found NetService \"\(service.name)\" in \"\(service.domain)\"...")
-        service.delegate = self
-        if service.port == -1 {
-            pendingServices.append(service)
-            service.resolve(withTimeout: 10)
-        } else {
-            self.netServiceDidResolveAddress(service)
+        if service.type == HTTP || service.type == HTTPS {
+            service.delegate = self
+            if service.port == -1 {
+                pendingServices.append(service)
+                service.resolve(withTimeout: 10)
+            } else {
+                self.netServiceDidResolveAddress(service)
+            }
         }
         if !moreComing {
             self.endRefreshing()
@@ -252,6 +256,12 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         if !domains.contains(domainString) {
             services[domainString] = [String: NetService]()
             serviceKeys[domainString] = [String]()
+        }
+        if !servicesBrowsers.keys.contains(domainString) {
+            let browser = NetServiceBrowser()
+            browser.delegate = self
+            servicesBrowsers[domainString] = browser
+            browser.searchForServices(ofType: SERVICES, inDomain: domainString)
         }
         if !typeBrowsers.keys.contains(domainString) {
             typeBrowsers[domainString] = [String: NetServiceBrowser]()
@@ -320,11 +330,16 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     /// - Returns: the URL for the service
     func url(_ service: NetService) -> URL? {
         if let hostName = service.hostName {
-            // "protocol" is a reserved word, so simply use "p"
-            let p = service.type == HTTPS ? "https" : "http"
-            let dict = NetService.dictionary(fromTXTRecord: service.txtRecordData()!)
-            let path = dict.keys.contains("path") ? String(data: dict["path"]!, encoding: .utf8) : ""
-            return URL(string:"\(p)://\(hostName):\(service.port)\(path ?? "")")!
+            switch service.type {
+            case HTTP, HTTPS:
+                // "protocol" is a reserved word, so simply use "p"
+                let p = service.type == HTTPS ? "https" : "http"
+                let dict = NetService.dictionary(fromTXTRecord: service.txtRecordData()!)
+                let path = dict.keys.contains("path") ? String(data: dict["path"]!, encoding: .utf8) : ""
+                return URL(string:"\(p)://\(hostName):\(service.port)\(path ?? "")")!
+            default:
+                return nil
+            }
         }
         return nil
     }
