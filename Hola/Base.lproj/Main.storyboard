@@ -68,14 +68,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Services" id="Zdf-7t-Un8" userLabel="Services">
-                        <barButtonItem key="leftBarButtonItem" title="Settings" id="Lfi-4E-HJa">
+                        <barButtonItem key="rightBarButtonItem" title="Settings" image="Settings" id="Lfi-4E-HJa">
                             <connections>
                                 <segue destination="Lph-rT-KUt" kind="show" id="202-9X-gFS"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="X0R-v7-aNV">
-                            <connections>
-                                <action selector="refresh" destination="7bK-jq-Zjz" id="cwg-SK-KoL"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -215,5 +210,8 @@
             <point key="canvasLocation" x="1505" y="-630"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Settings" width="22" height="22"/>
+    </resources>
     <color key="tintColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
 </document>
