@@ -50,7 +50,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        domainBrowser.searchForBrowsableDomains();
+        searchForBrowsableDomains()
         super.viewWillAppear(animated)
     }
 
@@ -77,15 +77,20 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         domainBrowser = nil
         domainBrowser = NetServiceBrowser()
         domainBrowser.delegate = self
-        domainBrowser.searchForBrowsableDomains()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: {
-            self.endRefreshing()
-        })
+        searchForBrowsableDomains()
     }
 
     func endRefreshing() {
         self.refreshControl?.endRefreshing()
         self.tableView.reloadData()
+    }
+
+    func searchForBrowsableDomains() {
+        domainBrowser.searchForBrowsableDomains()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: {
+            print("\(Date().debugDescription) Giving up on finding anything...")
+            self.searching = 0
+        })
     }
 
     func setTitle() {
