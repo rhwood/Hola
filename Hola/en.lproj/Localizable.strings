@@ -15,6 +15,9 @@
 /* list of services in default (local) domain */
 "LOCAL_SERVICES" = "Local Services";
 
+/* Cell title with active seaches */
+"SEARCHING" = "Scanning...";
+
 /* Cell title with no services */
 "NO_SERVICES_CELL_TITLE" = "No services found";
 

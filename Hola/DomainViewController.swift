@@ -15,7 +15,17 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     var domainBrowser: NetServiceBrowser!
     var servicesBrowsers = [String: NetServiceBrowser]()
     var typeBrowsers = [String: [String: NetServiceBrowser]]()
-    var searching = 0
+    var searching: Int = 0 {
+        didSet {
+            print("\(searching) active searches...")
+            if searching < 0 {
+                searching = 0
+            }
+            if !(searching > 0) {
+                self.endRefreshing()
+            }
+        }
+    }
     var pendingServices = [NetService]()
     var services = [String: [String: NetService]]() // [service.domain: [serviceKey(): service]]
     var domains = [String]() // [service.domain]
@@ -125,6 +135,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             cell.textLabel!.text = service.name
             cell.detailTextLabel!.text = url.absoluteString
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+        } else if searching > 0 {
+            cell.textLabel!.text = NSLocalizedString("SEARCHING", comment: "Cell title with active searches")
+            cell.detailTextLabel!.text = nil
+            cell.accessoryType = UITableViewCellAccessoryType.none
         } else {
             cell.textLabel!.text = NSLocalizedString("NO_SERVICES_CELL_TITLE", comment: "Cell title with no services")
             cell.detailTextLabel!.text = NSLocalizedString("NO_SERVICES_CELL_DETAIL", comment: "Cell details with no services")
@@ -172,6 +186,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     // MARK: - NetServices Browser
 
     func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
+        if browser == domainBrowser {
+            print("\(Date().debugDescription) Searching for browsable domains...")
+            searching += 1
+        }
         for domain in typeBrowsers {
             for type in domain.value {
                 if  type.value == browser {
@@ -188,9 +206,6 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
                 if type.value == browser {
                     print("\(Date().debugDescription) Stopped searching for \"\(type.key)\" services in \"\(domain.key)\"...")
                     searching -= 1
-                    if !(searching > 0) {
-                        self.endRefreshing()
-                    }
                 }
             }
         }
@@ -202,9 +217,6 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
                 if type.value == browser {
                     print("\(Date().debugDescription) Error searching for \"\(type.key)\" services in \"\(domain.key)\":\n\(errorDict.description)")
                     searching -= 1
-                    if !(searching > 0) {
-                        self.endRefreshing()
-                    }
                 }
             }
         }
@@ -220,7 +232,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             } else {
                 self.netServiceDidResolveAddress(service)
             }
+            searching -= 1
         }
+        // NOTE: when adding handlers for more than just HTTP, remember to properly decrement searching
         if !moreComing {
             self.endRefreshing()
         }
@@ -245,6 +259,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             services.removeAll()
             urls.removeAll()
             self.refresh()
+            return // do not check against moreComing to halt refresh
         }
         if !moreComing {
             self.endRefreshing()
@@ -278,6 +293,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             typeBrowsers[domainString]![HTTPS] = httpsBrowser
             httpsBrowser.searchForServices(ofType: HTTPS, inDomain: domainString)
         }
+        searching -= 1
         if !moreComing {
             self.endRefreshing()
         }
@@ -318,7 +334,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             urls[key] = url
             services[service.domain]?[key] = service
             serviceKeys[service.domain]?.sort()
-            self.endRefreshing()
+            searching -= 1
         }
     }
 
