@@ -6,6 +6,8 @@
 //  Copyright © 2017 Alexandria Software. All rights reserved.
 //
 
+// TODO: Replace print with os_log (once iOS 9.x is no longer supportable)
+
 import UIKit
 import SafariServices
 import SystemConfiguration.CaptiveNetwork
