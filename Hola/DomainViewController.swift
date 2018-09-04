@@ -89,7 +89,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     func searchForBrowsableDomains() {
         domainBrowser.searchForBrowsableDomains()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(2000), execute: {
             print("\(Date().debugDescription) Giving up on finding anything...")
             self.searching = 0
         })
