@@ -181,7 +181,14 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         } else {
             if let key = serviceKeys[domains[indexPath.section]]?[indexPath.row],
                 let url = urls[key] {
-                let controller = SFSafariViewController.init(url: url)
+                let controller: SFSafariViewController
+                if #available(iOS 11.0, *) {
+                    let configuration = SFSafariViewController.Configuration()
+                    configuration.barCollapsingEnabled = true
+                    controller = SFSafariViewController.init(url: url, configuration: configuration)
+                } else {
+                    controller = SFSafariViewController.init(url: url)
+                }
                 if #available(iOS 10.0, *) {
                     controller.preferredControlTintColor = self.view.tintColor
                 }
