@@ -434,6 +434,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     
     // MARK: - Utilities
 
+    /// Get the title for the domain view. Use a full title for the local. domain and include the
+    /// named domain if not local.
+    ///
+    /// - Parameter domain: The name of the domain
+    /// - Returns: The view title based on the domain name
     func getTitle(_ domain: String) -> String {
         if domain == LOCAL_DOMAIN {
             return NSLocalizedString("LOCAL_SERVICES", comment: "list of services in default (local) domain")
@@ -442,6 +447,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         }
     }
 
+    /// Get the network SSID, if possible
+    ///
+    /// - Returns: the network SSID or nil
     func getSSID() -> String? {
         let interfaces = CNCopySupportedInterfaces()
         if interfaces == nil {
