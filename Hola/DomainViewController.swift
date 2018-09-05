@@ -386,7 +386,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         } else {
             NSLog("Resolved NetService \"%@\" in \"%@\"...", service.name, service.domain)
         }
-        pendingServices.remove(at: pendingServices.index(of: service)!)
+        if pendingServices.contains(service) {
+            pendingServices.remove(at: pendingServices.index(of: service)!)
+        }
         if !domains.contains(service.domain) {
             domains.append(service.domain)
             domains.sort()
