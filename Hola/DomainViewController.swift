@@ -6,8 +6,9 @@
 //  Copyright © 2017 Alexandria Software. All rights reserved.
 //
 
-// TODO: Replace print with os_log (once iOS 9.x is no longer supportable)
+// TODO: Remove NSLog() calls once iOS 9.x is no longer supportable
 
+import os.log
 import UIKit
 import SafariServices
 import SystemConfiguration.CaptiveNetwork
@@ -19,7 +20,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     var typeBrowsers = [String: [String: NetServiceBrowser]]()
     var searching: Int = 0 {
         didSet {
-            print("\(searching) active searches...")
+            if #available(iOS 10.0, *) {
+                os_log("%d active searches...", searching)
+            } else {
+                NSLog("%d active searches...", searching)
+            }
             if searching < 0 {
                 searching = 0
             }
@@ -90,7 +95,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     func searchForBrowsableDomains() {
         domainBrowser.searchForBrowsableDomains()
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(2000), execute: {
-            print("\(Date().debugDescription) Giving up on finding anything...")
+            if #available(iOS 10.0, *) {
+                os_log("Giving up on finding anything...")
+            } else {
+                NSLog("Giving up on finding anything...")
+            }
             self.searching = 0
         })
     }
@@ -201,13 +210,21 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
 
     func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
         if browser == domainBrowser {
-            print("\(Date().debugDescription) Searching for browsable domains...")
+            if #available(iOS 10.0, *) {
+                os_log("Searching for browsable domains...")
+            } else {
+                NSLog("Searching for browsable domains...")
+            }
             searching += 1
         }
         for domain in typeBrowsers {
             for type in domain.value {
                 if  type.value == browser {
-                    print("\(Date().debugDescription) Searching for \"\(type.key)\" services in \"\(domain.key)\"...")
+                    if #available(iOS 10.0, *) {
+                        os_log("Searching for \"%@\" services in \"%@\"...", type.key, domain.key)
+                    } else {
+                        NSLog("Searching for \"%@\" services in \"%@\"...", type.key, domain.key)
+                    }
                     searching += 1
                 }
             }
@@ -218,7 +235,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         for domain in typeBrowsers {
             for type in domain.value {
                 if type.value == browser {
-                    print("\(Date().debugDescription) Stopped searching for \"\(type.key)\" services in \"\(domain.key)\"...")
+                    if #available(iOS 10.0, *) {
+                        os_log("Stopped searching for \"%@\" services in \"%@\"...", type.key, domain.key)
+                    } else {
+                        NSLog("Stopped searching for \"%@\" services in \"%@\"...", type.key, domain.key)
+                    }
                     searching -= 1
                 }
             }
@@ -229,7 +250,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         for domain in typeBrowsers {
             for type in domain.value {
                 if type.value == browser {
-                    print("\(Date().debugDescription) Error searching for \"\(type.key)\" services in \"\(domain.key)\":\n\(errorDict.description)")
+                    if #available(iOS 10.0, *) {
+                        os_log("Error searching for \"%@\" services in \"%@\":\n%@", type.key, domain.key, errorDict.description)
+                    } else {
+                        NSLog("Error searching for \"%@\" services in \"%@\":\n%@", type.key, domain.key, errorDict.description)
+                    }
                     searching -= 1
                 }
             }
@@ -237,7 +262,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
-        print("\(Date().debugDescription) Found NetService \"\(service.name)\" in \"\(service.domain)\"...")
+        if #available(iOS 10.0, *) {
+            os_log("Found NetService \"%@\" in \"%@\"...", service.name, service.domain)
+        } else {
+            NSLog("Found NetService \"%@\" in \"%@\"...", service.name, service.domain)
+        }
         if service.type == HTTP || service.type == HTTPS {
             service.delegate = self
             if service.port == -1 {
@@ -255,7 +284,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        print("\(Date().debugDescription) Removing NetService \"\(service.name)\" from \"\(service.domain)\"...")
+        if #available(iOS 10.0, *) {
+            os_log("Removing NetService \"%@\" from \"%@\"...", service.name, service.domain)
+        } else {
+            NSLog("Removing NetService \"%@\" from \"%@\"...", service.name, service.domain)
+        }
         if let key = serviceKey(service) {
             services[service.domain]?.removeValue(forKey: key)
             if let index = serviceKeys[service.domain]?.index(of: key) {
@@ -268,7 +301,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             }
             self.tableView.reloadData()
         } else {
-            print("\(Date().debugDescription) Unknown NetService \"\(service.name)\" on host \"\(service.hostName ?? "no hostname")\" from \"\(service.domain)\"...")
+            if #available(iOS 10.0, *) {
+                os_log("Unknown NetService \"%@\" on host \"%@\" from \"%@\"...", service.name, service.hostName ?? "no hostname", service.domain)
+            } else {
+                NSLog("Unknown NetService \"%@\" on host \"%@\" from \"%@\"...", service.name, service.hostName ?? "no hostname", service.domain)
+            }
             // reset and start over
             services.removeAll()
             urls.removeAll()
@@ -281,7 +318,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didFindDomain domainString: String, moreComing: Bool) {
-        print("\(Date().debugDescription) Adding domain \"\(domainString)\"...")
+        if #available(iOS 10.0, *) {
+            os_log("Adding domain \"%@\"...", domainString)
+        } else {
+            NSLog("Adding domain \"%@\"...", domainString)
+        }
         if !domains.contains(domainString) {
             services[domainString] = [String: NetService]()
             serviceKeys[domainString] = [String]()
@@ -314,7 +355,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemoveDomain domainString: String, moreComing: Bool) {
-        print("\(Date().debugDescription) Removing domain \"\(domainString)\"...")
+        if #available(iOS 10.0, *) {
+            os_log("Removing domain \"%@\"...", domainString)
+        } else {
+            NSLog("Removing domain \"%@\"...", domainString)
+        }
         if domains.contains(domainString) {
             domains.remove(at: domains.index(of: domainString)!)
             services.removeValue(forKey: domainString)
@@ -336,7 +381,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     // MARK: - NetService
 
     func netServiceDidResolveAddress(_ service: NetService) {
-        print("\(Date().debugDescription) Resolved NetService \"\(service.name)\" in \"\(service.domain)\"...")
+        if #available(iOS 10.0, *) {
+            os_log("Resolved NetService \"%@\" in \"%@\"...", service.name, service.domain)
+        } else {
+            NSLog("Resolved NetService \"%@\" in \"%@\"...", service.name, service.domain)
+        }
         pendingServices.remove(at: pendingServices.index(of: service)!)
         if !domains.contains(service.domain) {
             domains.append(service.domain)
