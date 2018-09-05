@@ -62,11 +62,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        domainBrowser.stop();
-        for domain in typeBrowsers {
-            for browser in domain.value {
-                browser.value.stop()
-            }
+        for domain in domains {
+            self.netServiceBrowser(domainBrowser, didRemoveDomain: domain, moreComing: true)
         }
         super.viewDidDisappear(animated)
     }
