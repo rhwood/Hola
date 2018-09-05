@@ -62,7 +62,14 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
             break
         case privacyPolicyCell:
             let url = URL(string: NSLocalizedString("PRIVACY_POLICY_URL", comment: "Privacy policy URL"))!
-            let controller = SFSafariViewController.init(url: url)
+            let controller: SFSafariViewController
+            if #available(iOS 11.0, *) {
+                let configuration = SFSafariViewController.Configuration()
+                configuration.barCollapsingEnabled = true
+                controller = SFSafariViewController.init(url: url, configuration: configuration)
+            } else {
+                controller = SFSafariViewController.init(url: url)
+            }
             if #available(iOS 10.0, *) {
                 controller.preferredControlTintColor = self.view.tintColor
             }
