@@ -418,7 +418,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     /// Create the service unique key for a given service, since service URLs can change,
-    /// but service names and domains are immutable within the lifetime of a service in Bonjour
+    /// but service names and domains are immutable within the lifetime of a service in zeroconf
+    /// networking.
     ///
     /// - Parameter service: The service to get a key for
     /// - Returns: the key for the service
