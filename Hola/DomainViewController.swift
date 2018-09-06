@@ -165,9 +165,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             // open sheet with details that allows site to be opened?
         } else {
             let network = getSSID()
-            let message = NSString.localizedStringWithFormat(
-                NSLocalizedString("NO_SERVICES_ALERT_MESSAGE", comment:"No services found alert message - replacement is network name") as NSString
-                , network ?? "this network") as String
+            let message = String.localizedStringWithFormat(
+                NSLocalizedString("NO_SERVICES_ALERT_MESSAGE",
+                                  comment: "No services found alert message - replacement is network name"),
+                network ?? "this network") // TODO: localize
             let alert = UIAlertController(title: NSLocalizedString("NO_SERVICES_ALERT_TITLE", comment: "No services found alert title"), message: message, preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: NSLocalizedString("NO_SERVICES_ALERT_OK_ACTION", comment: "No services found alert OK action"), style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -215,45 +216,39 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             searching += 1
         }
         for domain in typeBrowsers {
-            for type in domain.value {
-                if  type.value == browser {
-                    if #available(iOS 10.0, *) {
-                        os_log("Searching for \"%@\" services in \"%@\"...", type.key, domain.key)
-                    } else {
-                        NSLog("Searching for \"%@\" services in \"%@\"...", type.key, domain.key)
-                    }
-                    searching += 1
+            for type in domain.value where type.value == browser {
+                if #available(iOS 10.0, *) {
+                    os_log("Searching for \"%@\" services in \"%@\"...", type.key, domain.key)
+                } else {
+                    NSLog("Searching for \"%@\" services in \"%@\"...", type.key, domain.key)
                 }
+                searching += 1
             }
         }
     }
 
     func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
         for domain in typeBrowsers {
-            for type in domain.value {
-                if type.value == browser {
-                    if #available(iOS 10.0, *) {
-                        os_log("Stopped searching for \"%@\" services in \"%@\"...", type.key, domain.key)
-                    } else {
-                        NSLog("Stopped searching for \"%@\" services in \"%@\"...", type.key, domain.key)
-                    }
-                    searching -= 1
+            for type in domain.value where type.value == browser {
+                if #available(iOS 10.0, *) {
+                    os_log("Stopped searching for \"%@\" services in \"%@\"...", type.key, domain.key)
+                } else {
+                    NSLog("Stopped searching for \"%@\" services in \"%@\"...", type.key, domain.key)
                 }
+                searching -= 1
             }
         }
     }
 
-    func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String : NSNumber]) {
+    func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String: NSNumber]) {
         for domain in typeBrowsers {
-            for type in domain.value {
-                if type.value == browser {
-                    if #available(iOS 10.0, *) {
-                        os_log("Error searching for \"%@\" services in \"%@\":\n%@", type.key, domain.key, errorDict.description)
-                    } else {
-                        NSLog("Error searching for \"%@\" services in \"%@\":\n%@", type.key, domain.key, errorDict.description)
-                    }
-                    searching -= 1
+            for type in domain.value where type.value == browser {
+                if #available(iOS 10.0, *) {
+                    os_log("Error searching for \"%@\" services in \"%@\":\n%@", type.key, domain.key, errorDict.description)
+                } else {
+                    NSLog("Error searching for \"%@\" services in \"%@\":\n%@", type.key, domain.key, errorDict.description)
                 }
+                searching -= 1
             }
         }
     }
@@ -414,7 +409,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
                 let p = service.type == HTTPS ? "https" : "http"
                 let dict = NetService.dictionary(fromTXTRecord: service.txtRecordData()!)
                 let path = dict.keys.contains("path") ? String(data: dict["path"]!, encoding: .utf8) : ""
-                return URL(string:"\(p)://\(hostName):\(service.port)\(path ?? "")")!
+                return URL(string: "\(p)://\(hostName):\(service.port)\(path ?? "")")!
             default:
                 return nil
             }
@@ -430,7 +425,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     func serviceKey(_ service: NetService) -> String? {
         return "\(service.name).\(service.domain)"
     }
-    
+
     // MARK: - Utilities
 
     /// Get the title for the domain view. Use a full title for the local. domain and include the
@@ -450,21 +445,16 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     ///
     /// - Returns: the network SSID or nil
     func getSSID() -> String? {
-        let interfaces = CNCopySupportedInterfaces()
-        if interfaces == nil {
-            return nil
+        if let interfaces = CNCopySupportedInterfaces() as? [String] {
+            if !(interfaces.count > 0) {
+                return nil
+            }
+            let interfaceName = interfaces[0] as String
+            if let unsafeInterfaceData = CNCopyCurrentNetworkInfo(interfaceName as CFString),
+                let interfaceData = unsafeInterfaceData as? [String: AnyObject] {
+                return interfaceData["SSID"] as? String
+            }
         }
-        let interfacesArray = interfaces as! [String]
-        if interfacesArray.count <= 0 {
-            return nil
-        }
-        let interfaceName = interfacesArray[0] as String
-        let unsafeInterfaceData = CNCopyCurrentNetworkInfo(interfaceName as CFString)
-        if unsafeInterfaceData == nil {
-            return nil
-        }
-        let interfaceData = unsafeInterfaceData as! Dictionary <String,AnyObject>
-        return interfaceData["SSID"] as? String
+        return nil
     }
 }
-

@@ -29,20 +29,22 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
             showEmptySwitch.isOn = UserDefaults.standard.bool(forKey: "showEmptyDomains")
         }
     }
-    
+
     @IBAction func showEmpty(_ sender: UISwitch) {
         UserDefaults.standard.set(sender.isOn, forKey: "showEmptyDomains")
     }
-    
+
     // MARK: - Table View
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch tableView.cellForRow(at: indexPath) {
         case emailCell:
-            if (!MFMailComposeViewController.canSendMail()) {
+            if !MFMailComposeViewController.canSendMail() {
                 let alert = UIAlertController(
                     title: NSLocalizedString("NO_EMAIL_TITLE", comment: "Alert title with no email"),
-                    message: NSString.localizedStringWithFormat(NSLocalizedString("NO_EMAIL_MESSAGE", comment: "Alert message with no email") as NSString, UIDevice.current.model) as String,
+                    message: String.localizedStringWithFormat(NSLocalizedString("NO_EMAIL_MESSAGE",
+                                                                                comment: "Alert message with no email"),
+                                                              UIDevice.current.model),
                     preferredStyle: .alert)
                 alert.addAction(UIAlertAction(
                     title: NSLocalizedString("OK", comment: "Default action"),
@@ -59,7 +61,6 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
             controller.setSubject("Hola! (\(shortVersion) (\(longVersion))) Feedback")
             controller.navigationBar.tintColor = self.view.tintColor
             present(controller, animated: true)
-            break
         case privacyPolicyCell:
             let url = URL(string: NSLocalizedString("PRIVACY_POLICY_URL", comment: "Privacy policy URL"))!
             let controller: SFSafariViewController
@@ -74,18 +75,19 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
                 controller.preferredControlTintColor = self.view.tintColor
             }
             present(controller, animated: true)
-            break
         default:
             // nothing to do
             break
         }
     }
-    
+
     // MARK: - Mail Delegate
-    
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+
+    func mailComposeController(_ controller: MFMailComposeViewController,
+                               didFinishWith result: MFMailComposeResult,
+                               error: Error?) {
         // Check the result or perform other tasks.
-        
+
         // Dismiss the mail compose view controller.
         controller.dismiss(animated: true, completion: nil)
     }
