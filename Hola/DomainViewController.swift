@@ -6,8 +6,6 @@
 //  Copyright © 2017 Alexandria Software. All rights reserved.
 //
 
-// TODO: Remove NSLog() calls once iOS 9.x is no longer supportable
-
 import os.log
 import UIKit
 import SafariServices
@@ -38,15 +36,6 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     var domains = [String]() // [service.domain]
     var serviceKeys = [String: [String]]() // [service.domain: [serviceKey()]]
     var urls = [String: URL]() // [serviceKey(): url()]
-    let SERVICES = "_services._dns-sd._udp."
-    let HTTP = "_http._tcp."
-    // search for HTTPS even though not recommended
-    // see https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?search=https
-    // and scroll to Tim Berners Lee's comments on the HTTPS entry without associated port
-    let HTTPS = "_https._tcp."
-    let DOMAIN_ROOT = "." // returned as domain for any types returned when searching for SERVICES
-    let DEFAULT_DOMAIN = "" // use default instead of "local."
-    let LOCAL_DOMAIN = "local." // the local domain, handled as "" in app
 
     // MARK: - View
 
@@ -102,7 +91,9 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     }
 
     func setTitle() {
-        title = domains.count != 1 ? NSLocalizedString("VIEW_TITLE", comment: "title if showing multiple or zero domains") : self.getTitle(domains[0])
+        title = domains.count != 1
+            ? NSLocalizedString("VIEW_TITLE", comment: "title if showing multiple or zero domains")
+            : self.getTitle(domains[0])
     }
 
     // MARK: - Segues
@@ -154,7 +145,8 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             cell.accessoryType = UITableViewCellAccessoryType.none
         } else {
             cell.textLabel!.text = NSLocalizedString("NO_SERVICES_CELL_TITLE", comment: "Cell title with no services")
-            cell.detailTextLabel!.text = NSLocalizedString("NO_SERVICES_CELL_DETAIL", comment: "Cell details with no services")
+            cell.detailTextLabel!.text = NSLocalizedString("NO_SERVICES_CELL_DETAIL",
+                                                           comment: "Cell details with no services")
             cell.accessoryType = UITableViewCellAccessoryType.detailButton
         }
         return cell
@@ -168,9 +160,15 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             let message = String.localizedStringWithFormat(
                 NSLocalizedString("NO_SERVICES_ALERT_MESSAGE",
                                   comment: "No services found alert message - replacement is network name"),
-                network ?? "this network") // TODO: localize
-            let alert = UIAlertController(title: NSLocalizedString("NO_SERVICES_ALERT_TITLE", comment: "No services found alert title"), message: message, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("NO_SERVICES_ALERT_OK_ACTION", comment: "No services found alert OK action"), style: UIAlertActionStyle.default, handler: nil))
+                network ?? NSLocalizedString("THIS_NETWORK", comment: "Network name for unknown network"))
+            let alert = UIAlertController(
+                title: NSLocalizedString("NO_SERVICES_ALERT_TITLE", comment: "No services found alert title"),
+                message: message,
+                preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(
+                title: NSLocalizedString("NO_SERVICES_ALERT_OK_ACTION", comment: "No services found alert OK action"),
+                style: UIAlertActionStyle.default,
+                handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -244,9 +242,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         for domain in typeBrowsers {
             for type in domain.value where type.value == browser {
                 if #available(iOS 10.0, *) {
-                    os_log("Error searching for \"%@\" services in \"%@\":\n%@", type.key, domain.key, errorDict.description)
+                    os_log("Error searching for \"%@\" services in \"%@\":\n%@",
+                           type.key, domain.key, errorDict.description)
                 } else {
-                    NSLog("Error searching for \"%@\" services in \"%@\":\n%@", type.key, domain.key, errorDict.description)
+                    NSLog("Error searching for \"%@\" services in \"%@\":\n%@",
+                          type.key, domain.key, errorDict.description)
                 }
                 searching -= 1
             }
@@ -259,7 +259,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
         } else {
             NSLog("Found NetService \"%@\" in \"%@\"...", service.name, service.domain)
         }
-        if service.type == HTTP || service.type == HTTPS {
+        if service.type == ServiceType.HTTP || service.type == ServiceType.HTTPS {
             service.delegate = self
             if service.port == -1 {
                 pendingServices.append(service)
@@ -287,16 +287,20 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
                 serviceKeys[service.domain]?.remove(at: index)
             }
             urls.removeValue(forKey: key)
-            if (service.domain != LOCAL_DOMAIN) && (services[service.domain] != nil) && ((services[service.domain]?.count)! < 1) {
+            if (service.domain != Domain.Local)
+                && (services[service.domain] != nil)
+                && ((services[service.domain]?.count)! < 1) {
                 domains.remove(at: domains.index(of: service.domain)!)
                 setTitle()
             }
             self.tableView.reloadData()
         } else {
             if #available(iOS 10.0, *) {
-                os_log("Unknown NetService \"%@\" on host \"%@\" from \"%@\"...", service.name, service.hostName ?? "no hostname", service.domain)
+                os_log("Unknown NetService \"%@\" on host \"%@\" from \"%@\"...",
+                       service.name, service.hostName ?? "no hostname", service.domain)
             } else {
-                NSLog("Unknown NetService \"%@\" on host \"%@\" from \"%@\"...", service.name, service.hostName ?? "no hostname", service.domain)
+                NSLog("Unknown NetService \"%@\" on host \"%@\" from \"%@\"...",
+                      service.name, service.hostName ?? "no hostname", service.domain)
             }
             // reset and start over
             services.removeAll()
@@ -323,22 +327,22 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             let browser = NetServiceBrowser()
             browser.delegate = self
             servicesBrowsers[domainString] = browser
-            browser.searchForServices(ofType: SERVICES, inDomain: domainString)
+            browser.searchForServices(ofType: ServiceType.Services, inDomain: domainString)
         }
         if !typeBrowsers.keys.contains(domainString) {
             typeBrowsers[domainString] = [String: NetServiceBrowser]()
         }
-        if typeBrowsers[domainString]![HTTP] == nil {
+        if typeBrowsers[domainString]![ServiceType.HTTP] == nil {
             let httpBrowser = NetServiceBrowser()
             httpBrowser.delegate = self
-            typeBrowsers[domainString]![HTTP] = httpBrowser
-            httpBrowser.searchForServices(ofType: HTTP, inDomain: domainString)
+            typeBrowsers[domainString]![ServiceType.HTTP] = httpBrowser
+            httpBrowser.searchForServices(ofType: ServiceType.HTTP, inDomain: domainString)
         }
-        if typeBrowsers[domainString]![HTTPS] == nil {
+        if typeBrowsers[domainString]![ServiceType.HTTPS] == nil {
             let httpsBrowser = NetServiceBrowser()
             httpsBrowser.delegate = self
-            typeBrowsers[domainString]![HTTPS] = httpsBrowser
-            httpsBrowser.searchForServices(ofType: HTTPS, inDomain: domainString)
+            typeBrowsers[domainString]![ServiceType.HTTPS] = httpsBrowser
+            httpsBrowser.searchForServices(ofType: ServiceType.HTTPS, inDomain: domainString)
         }
         searching -= 1
         if !moreComing {
@@ -404,12 +408,11 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     func url(_ service: NetService) -> URL? {
         if let hostName = service.hostName {
             switch service.type {
-            case HTTP, HTTPS:
-                // "protocol" is a reserved word, so simply use "p"
-                let p = service.type == HTTPS ? "https" : "http"
+            case ServiceType.HTTP, ServiceType.HTTPS:
+                let type = service.type == ServiceType.HTTPS ? "https" : "http"
                 let dict = NetService.dictionary(fromTXTRecord: service.txtRecordData()!)
                 let path = dict.keys.contains("path") ? String(data: dict["path"]!, encoding: .utf8) : ""
-                return URL(string: "\(p)://\(hostName):\(service.port)\(path ?? "")")!
+                return URL(string: "\(type)://\(hostName):\(service.port)\(path ?? "")")!
             default:
                 return nil
             }
@@ -435,10 +438,12 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     /// - Parameter domain: The name of the domain
     /// - Returns: The view title based on the domain name
     func getTitle(_ domain: String) -> String {
-        if domain == LOCAL_DOMAIN {
-            return NSLocalizedString("LOCAL_SERVICES", comment: "list of services in default (local) domain")
+        if domain == Domain.Local {
+            return NSLocalizedString("LOCAL_SERVICES", comment: "services in default (local) domain")
         } else {
-            return String.localizedStringWithFormat(NSLocalizedString("DOMAIN_SERVICES", comment: "list of services in non-default domain - replacement is domain"), domain)
+            return String.localizedStringWithFormat(
+                NSLocalizedString("DOMAIN_SERVICES", comment: "services in non-default domain"),
+                domain)
         }
     }
 
@@ -446,15 +451,10 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     ///
     /// - Returns: the network SSID or nil
     func getSSID() -> String? {
-        if let interfaces = CNCopySupportedInterfaces() as? [String] {
-            if !(interfaces.count > 0) {
-                return nil
-            }
-            let interfaceName = interfaces[0] as String
-            if let unsafeInterfaceData = CNCopyCurrentNetworkInfo(interfaceName as CFString),
-                let interfaceData = unsafeInterfaceData as? [String: AnyObject] {
-                return interfaceData["SSID"] as? String
-            }
+        if let interfaces = CNCopySupportedInterfaces() as? [CFString],
+            interfaces.count > 0,
+            let interfaceData = (CNCopyCurrentNetworkInfo(interfaces[0])) as? [String: AnyObject] {
+            return interfaceData["SSID"] as? String
         }
         return nil
     }

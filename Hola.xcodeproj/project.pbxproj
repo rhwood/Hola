@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4835E18D2052BB1A000D9C0E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4835E18F2052BB1A000D9C0E /* Localizable.strings */; };
 		4842950E1F6F1906006E70C4 /* Hola-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4842950D1F6F1906006E70C4 /* Hola-Logo.png */; };
+		487A5C042142869300F06216 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A5C032142869300F06216 /* Constants.swift */; };
 		488F1D301F6DCDD4008559A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D2F1F6DCDD4008559A8 /* AppDelegate.swift */; };
 		488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D311F6DCDD4008559A8 /* DomainViewController.swift */; };
 		488F1D371F6DCDD4008559A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 488F1D351F6DCDD4008559A8 /* Main.storyboard */; };
@@ -42,6 +43,7 @@
 		4835E18E2052BB1A000D9C0E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4835E1912052BB7F000D9C0E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		4842950D1F6F1906006E70C4 /* Hola-Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Hola-Logo.png"; sourceTree = "<group>"; };
+		487A5C032142869300F06216 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		488F1D2C1F6DCDD4008559A8 /* Hola.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hola.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		488F1D2F1F6DCDD4008559A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		488F1D311F6DCDD4008559A8 /* DomainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainViewController.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				488F1D3A1F6DCDD4008559A8 /* LaunchScreen.storyboard */,
 				488F1D3D1F6DCDD4008559A8 /* Info.plist */,
 				4835E18F2052BB1A000D9C0E /* Localizable.strings */,
+				487A5C032142869300F06216 /* Constants.swift */,
 			);
 			path = Hola;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */,
 				488F1D301F6DCDD4008559A8 /* AppDelegate.swift in Sources */,
 				48FEBDC7207F656C00785305 /* SettingsViewController.swift in Sources */,
+				487A5C042142869300F06216 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

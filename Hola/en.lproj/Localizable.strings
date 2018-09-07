@@ -9,10 +9,10 @@
 /* title if showing multiple or zero domains */
 "VIEW_TITLE" = "Services";
 
-/* list of services in non-default domain - replacement is domain */
+/* services in non-default domain */
 "DOMAIN_SERVICES" = "%@ Services";
 
-/* list of services in default (local) domain */
+/* services in default (local) domain */
 "LOCAL_SERVICES" = "Local Services";
 
 /* Cell title with active seaches */
@@ -34,6 +34,9 @@
 "NO_SERVICES_ALERT_MESSAGE" = "Unable to find services on %@.
 
 Ensure you are on the desired network and expected services, applications, or devices are running.";
+
+/* Network name for unknown network */
+"THIS_NETWORK" = "this network";
 
 /* Alert title with no email */
 "NO_EMAIL_TITLE" = "Unable to Send Email";
