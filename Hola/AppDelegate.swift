@@ -32,5 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
+        BrowserManager.shared.stop()
     }
 }

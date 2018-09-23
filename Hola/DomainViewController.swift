@@ -11,83 +11,72 @@ import UIKit
 import SafariServices
 import SystemConfiguration.CaptiveNetwork
 
-class DomainViewController: UITableViewController, NetServiceBrowserDelegate, NetServiceDelegate {
+class DomainViewController: UITableViewController {
 
-    var domainBrowser: NetServiceBrowser!
-    var servicesBrowsers = [String: NetServiceBrowser]()
-    var typeBrowsers = [String: [String: NetServiceBrowser]]()
-    var searching: Int = 0 {
-        didSet {
-            if #available(iOS 10.0, *) {
-                os_log("%d active searches...", searching)
-            } else {
-                NSLog("%d active searches...", searching)
-            }
-            if searching < 0 {
-                searching = 0
-            }
-            if !(searching > 0) {
-                self.endRefreshing()
-            }
-        }
+    private var domains: [String] {
+        return BrowserManager.shared.domains
     }
-    var pendingServices = [NetService]()
-    var services = [String: [String: NetService]]() // [service.domain: [serviceKey(): service]]
-    var domains = [String]() // [service.domain]
-    var serviceKeys = [String: [String]]() // [service.domain: [serviceKey()]]
-    var urls = [String: URL]() // [serviceKey(): url()]
+    private var serviceKeys: [String: [String]] {
+        return BrowserManager.shared.serviceKeys
+    }
+    private var services: [String: [String: NetService]] {
+        return BrowserManager.shared.services
+    }
+    private var urls: [String: URL] {
+        return BrowserManager.shared.urls
+    }
+    private var didEndSearchingObserver: Any?
+    private var didRemoveServiceObserver: Any?
+    private var didResolveServiceObserver: Any?
+    private var didStartSearchingObserver: Any?
 
     // MARK: - View
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        domainBrowser = NetServiceBrowser()
-        domainBrowser.delegate = self
-    }
-
     override func viewWillAppear(_ animated: Bool) {
-        searchForBrowsableDomains()
+        didStartSearchingObserver = NotificationCenter.default.addObserver(
+            forName: BrowserManager.didStartSearching,
+            object: BrowserManager.shared,
+            queue: OperationQueue.main) { (_) in
+                self.refreshControl?.beginRefreshing()
+        }
+        didEndSearchingObserver = NotificationCenter.default.addObserver(
+            forName: BrowserManager.didEndSearching,
+            object: BrowserManager.shared,
+            queue: OperationQueue.main) { (_) in
+                self.endRefreshing()
+        }
+        didRemoveServiceObserver = NotificationCenter.default.addObserver(
+            forName: BrowserManager.didRemoveService,
+            object: BrowserManager.shared,
+            queue: OperationQueue.main) { (_) in
+                self.tableView.reloadData()
+        }
+        didResolveServiceObserver = NotificationCenter.default.addObserver(
+            forName: BrowserManager.didResolveService,
+            object: BrowserManager.shared,
+            queue: OperationQueue.main) { (_) in
+                self.tableView.reloadData()
+        }
+        BrowserManager.shared.search()
         super.viewWillAppear(animated)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        for domain in domains {
-            self.netServiceBrowser(domainBrowser, didRemoveDomain: domain, moreComing: true)
-        }
+        NotificationCenter.default.removeObserver(didStartSearchingObserver!)
+        NotificationCenter.default.removeObserver(didEndSearchingObserver!)
+        NotificationCenter.default.removeObserver(didRemoveServiceObserver!)
+        NotificationCenter.default.removeObserver(didResolveServiceObserver!)
         super.viewDidDisappear(animated)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        services.removeAll()
     }
 
     @IBAction func refresh() {
         self.refreshControl?.beginRefreshing()
-        for domain in domains {
-            self.netServiceBrowser(domainBrowser, didRemoveDomain: domain, moreComing: true)
-        }
-        domainBrowser = nil
-        domainBrowser = NetServiceBrowser()
-        domainBrowser.delegate = self
-        searchForBrowsableDomains()
+        BrowserManager.shared.refresh()
     }
 
     func endRefreshing() {
         self.refreshControl?.endRefreshing()
         self.tableView.reloadData()
-    }
-
-    func searchForBrowsableDomains() {
-        domainBrowser.searchForBrowsableDomains()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(2000), execute: {
-            if #available(iOS 10.0, *) {
-                os_log("Giving up on finding anything...")
-            } else {
-                NSLog("Giving up on finding anything...")
-            }
-            self.searching = 0
-        })
     }
 
     func setTitle() {
@@ -99,7 +88,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     // MARK: - Segues
 
     @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
-        self.refresh()
+        // function is target, but has nothing to do
     }
 
     // MARK: - Table View
@@ -118,7 +107,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if domains.count > section {
             let domain = domains[section]
-            if let domainServices = services[domain] {
+            if let domainServices = BrowserManager.shared.services[domain] {
                 return domainServices.count >= 0 ? domainServices.count : 0
             }
         }
@@ -139,7 +128,7 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
             cell.textLabel!.text = service.name
             cell.detailTextLabel!.text = url.absoluteString
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-        } else if searching > 0 {
+        } else if BrowserManager.shared.searching > 0 {
             cell.textLabel!.text = NSLocalizedString("SEARCHING", comment: "Cell title with active searches")
             cell.detailTextLabel!.text = nil
             cell.accessoryType = UITableViewCellAccessoryType.none
@@ -200,234 +189,6 @@ class DomainViewController: UITableViewController, NetServiceBrowserDelegate, Ne
                 present(controller, animated: true)
             }
         }
-    }
-
-    // MARK: - NetServices Browser
-
-    func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
-        if browser == domainBrowser {
-            if #available(iOS 10.0, *) {
-                os_log("Searching for browsable domains...")
-            } else {
-                NSLog("Searching for browsable domains...")
-            }
-            searching += 1
-        }
-        for domain in typeBrowsers {
-            for type in domain.value where type.value == browser {
-                if #available(iOS 10.0, *) {
-                    os_log("Searching for \"%@\" services in \"%@\"...", type.key, domain.key)
-                } else {
-                    NSLog("Searching for \"%@\" services in \"%@\"...", type.key, domain.key)
-                }
-                searching += 1
-            }
-        }
-    }
-
-    func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
-        for domain in typeBrowsers {
-            for type in domain.value where type.value == browser {
-                if #available(iOS 10.0, *) {
-                    os_log("Stopped searching for \"%@\" services in \"%@\"...", type.key, domain.key)
-                } else {
-                    NSLog("Stopped searching for \"%@\" services in \"%@\"...", type.key, domain.key)
-                }
-                searching -= 1
-            }
-        }
-    }
-
-    func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String: NSNumber]) {
-        for domain in typeBrowsers {
-            for type in domain.value where type.value == browser {
-                if #available(iOS 10.0, *) {
-                    os_log("Error searching for \"%@\" services in \"%@\":\n%@",
-                           type.key, domain.key, errorDict.description)
-                } else {
-                    NSLog("Error searching for \"%@\" services in \"%@\":\n%@",
-                          type.key, domain.key, errorDict.description)
-                }
-                searching -= 1
-            }
-        }
-    }
-
-    func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
-        if #available(iOS 10.0, *) {
-            os_log("Found NetService \"%@\" in \"%@\"...", service.name, service.domain)
-        } else {
-            NSLog("Found NetService \"%@\" in \"%@\"...", service.name, service.domain)
-        }
-        if service.type == ServiceType.HTTP || service.type == ServiceType.HTTPS {
-            service.delegate = self
-            if service.port == -1 {
-                pendingServices.append(service)
-                service.resolve(withTimeout: 10)
-            } else {
-                self.netServiceDidResolveAddress(service)
-            }
-            searching -= 1
-        }
-        // NOTE: when adding handlers for more than just HTTP, remember to properly decrement searching
-        if !moreComing {
-            self.endRefreshing()
-        }
-    }
-
-    func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        if #available(iOS 10.0, *) {
-            os_log("Removing NetService \"%@\" from \"%@\"...", service.name, service.domain)
-        } else {
-            NSLog("Removing NetService \"%@\" from \"%@\"...", service.name, service.domain)
-        }
-        if let key = serviceKey(service) {
-            services[service.domain]?.removeValue(forKey: key)
-            if let index = serviceKeys[service.domain]?.index(of: key) {
-                serviceKeys[service.domain]?.remove(at: index)
-            }
-            urls.removeValue(forKey: key)
-            if (service.domain != Domain.Local)
-                && (services[service.domain] != nil)
-                && ((services[service.domain]?.count)! < 1) {
-                domains.remove(at: domains.index(of: service.domain)!)
-                setTitle()
-            }
-            self.tableView.reloadData()
-        } else {
-            if #available(iOS 10.0, *) {
-                os_log("Unknown NetService \"%@\" on host \"%@\" from \"%@\"...",
-                       service.name, service.hostName ?? "no hostname", service.domain)
-            } else {
-                NSLog("Unknown NetService \"%@\" on host \"%@\" from \"%@\"...",
-                      service.name, service.hostName ?? "no hostname", service.domain)
-            }
-            // reset and start over
-            services.removeAll()
-            urls.removeAll()
-            self.refresh()
-            return // do not check against moreComing to halt refresh
-        }
-        if !moreComing {
-            self.endRefreshing()
-        }
-    }
-
-    func netServiceBrowser(_ browser: NetServiceBrowser, didFindDomain domainString: String, moreComing: Bool) {
-        if #available(iOS 10.0, *) {
-            os_log("Adding domain \"%@\"...", domainString)
-        } else {
-            NSLog("Adding domain \"%@\"...", domainString)
-        }
-        if !domains.contains(domainString) {
-            services[domainString] = [String: NetService]()
-            serviceKeys[domainString] = [String]()
-        }
-        if !servicesBrowsers.keys.contains(domainString) {
-            let browser = NetServiceBrowser()
-            browser.delegate = self
-            servicesBrowsers[domainString] = browser
-            browser.searchForServices(ofType: ServiceType.Services, inDomain: domainString)
-        }
-        if !typeBrowsers.keys.contains(domainString) {
-            typeBrowsers[domainString] = [String: NetServiceBrowser]()
-        }
-        if typeBrowsers[domainString]![ServiceType.HTTP] == nil {
-            let httpBrowser = NetServiceBrowser()
-            httpBrowser.delegate = self
-            typeBrowsers[domainString]![ServiceType.HTTP] = httpBrowser
-            httpBrowser.searchForServices(ofType: ServiceType.HTTP, inDomain: domainString)
-        }
-        if typeBrowsers[domainString]![ServiceType.HTTPS] == nil {
-            let httpsBrowser = NetServiceBrowser()
-            httpsBrowser.delegate = self
-            typeBrowsers[domainString]![ServiceType.HTTPS] = httpsBrowser
-            httpsBrowser.searchForServices(ofType: ServiceType.HTTPS, inDomain: domainString)
-        }
-        searching -= 1
-        if !moreComing {
-            self.endRefreshing()
-        }
-    }
-
-    func netServiceBrowser(_ browser: NetServiceBrowser, didRemoveDomain domainString: String, moreComing: Bool) {
-        if #available(iOS 10.0, *) {
-            os_log("Removing domain \"%@\"...", domainString)
-        } else {
-            NSLog("Removing domain \"%@\"...", domainString)
-        }
-        if domains.contains(domainString) {
-            domains.remove(at: domains.index(of: domainString)!)
-            services.removeValue(forKey: domainString)
-            serviceKeys.removeValue(forKey: domainString)
-            urls.removeValue(forKey: domainString)
-            if typeBrowsers.keys.contains(domainString) {
-                for browsers in typeBrowsers[domainString]! {
-                    browsers.value.stop()
-                }
-            }
-            typeBrowsers.removeValue(forKey: domainString)
-            self.setTitle()
-        }
-        if !moreComing {
-            self.endRefreshing()
-        }
-    }
-
-    // MARK: - NetService
-
-    func netServiceDidResolveAddress(_ service: NetService) {
-        if #available(iOS 10.0, *) {
-            os_log("Resolved NetService \"%@\" in \"%@\"...", service.name, service.domain)
-        } else {
-            NSLog("Resolved NetService \"%@\" in \"%@\"...", service.name, service.domain)
-        }
-        if pendingServices.contains(service) {
-            pendingServices.remove(at: pendingServices.index(of: service)!)
-        }
-        if !domains.contains(service.domain) {
-            domains.append(service.domain)
-            domains.sort()
-            setTitle()
-        }
-        if let key = serviceKey(service), let url = url(service) {
-            serviceKeys[service.domain]?.append(key)
-            urls[key] = url
-            services[service.domain]?[key] = service
-            serviceKeys[service.domain]?.sort()
-            searching -= 1
-        }
-    }
-
-    /// Create the URL for a given service. Note that URLs are mutable within the lifetime of a
-    /// service, so they are only usable to navigating to that service, not for (re)identifying a
-    /// unique service; use `serviceKey(_ service: NetService)` for that.
-    ///
-    /// - Parameter service: The service to get a URL for
-    /// - Returns: the URL for the service
-    func url(_ service: NetService) -> URL? {
-        if let hostName = service.hostName {
-            switch service.type {
-            case ServiceType.HTTP, ServiceType.HTTPS:
-                let type = service.type == ServiceType.HTTPS ? "https" : "http"
-                let dict = NetService.dictionary(fromTXTRecord: service.txtRecordData()!)
-                let path = dict.keys.contains("path") ? String(data: dict["path"]!, encoding: .utf8) : ""
-                return URL(string: "\(type)://\(hostName):\(service.port)\(path ?? "")")!
-            default:
-                return nil
-            }
-        }
-        return nil
-    }
-
-    /// Create the service unique key for a given service, since service URLs can change,
-    /// but service names and domains are immutable within the lifetime of a service in zeroconf
-    /// networking.
-    ///
-    /// - Parameter service: The service to get a key for
-    /// - Returns: the key for the service
-    func serviceKey(_ service: NetService) -> String? {
-        return "\(service.name).\(service.domain)"
     }
 
     // MARK: - Utilities
