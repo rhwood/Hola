@@ -127,16 +127,16 @@ class DomainViewController: UITableViewController {
             let service = domain[serviceKey] {
             cell.textLabel!.text = service.name
             cell.detailTextLabel!.text = url.absoluteString
-            cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+            cell.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
         } else if BrowserManager.shared.searching > 0 {
             cell.textLabel!.text = NSLocalizedString("SEARCHING", comment: "Cell title with active searches")
             cell.detailTextLabel!.text = nil
-            cell.accessoryType = UITableViewCellAccessoryType.none
+            cell.accessoryType = UITableViewCell.AccessoryType.none
         } else {
             cell.textLabel!.text = NSLocalizedString("NO_SERVICES_CELL_TITLE", comment: "Cell title with no services")
             cell.detailTextLabel!.text = NSLocalizedString("NO_SERVICES_CELL_DETAIL",
                                                            comment: "Cell details with no services")
-            cell.accessoryType = UITableViewCellAccessoryType.detailButton
+            cell.accessoryType = UITableViewCell.AccessoryType.detailButton
         }
         return cell
     }
@@ -153,10 +153,10 @@ class DomainViewController: UITableViewController {
             let alert = UIAlertController(
                 title: NSLocalizedString("NO_SERVICES_ALERT_TITLE", comment: "No services found alert title"),
                 message: message,
-                preferredStyle: UIAlertControllerStyle.alert)
+                preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(
                 title: NSLocalizedString("NO_SERVICES_ALERT_OK_ACTION", comment: "No services found alert OK action"),
-                style: UIAlertActionStyle.default,
+                style: UIAlertAction.Style.default,
                 handler: nil))
             self.present(alert, animated: true, completion: nil)
         }

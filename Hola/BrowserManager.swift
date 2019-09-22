@@ -172,14 +172,14 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
         }
         if let key = serviceKey(service) {
             services[service.domain]?.removeValue(forKey: key)
-            if let index = serviceKeys[service.domain]?.index(of: key) {
+            if let index = serviceKeys[service.domain]?.firstIndex(of: key) {
                 serviceKeys[service.domain]?.remove(at: index)
             }
             urls.removeValue(forKey: key)
             if (service.domain != Domain.Local)
                 && (services[service.domain] != nil)
                 && ((services[service.domain]?.count)! < 1) {
-                domains.remove(at: domains.index(of: service.domain)!)
+                domains.remove(at: domains.firstIndex(of: service.domain)!)
             }
             NotificationCenter.default.post(name: BrowserManager.didRemoveService, object: self)
         } else {
@@ -243,7 +243,7 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
             NSLog("Removing domain \"%@\"...", domainString)
         }
         if domains.contains(domainString) {
-            domains.remove(at: domains.index(of: domainString)!)
+            domains.remove(at: domains.firstIndex(of: domainString)!)
             services.removeValue(forKey: domainString)
             serviceKeys.removeValue(forKey: domainString)
             urls.removeValue(forKey: domainString)
@@ -268,7 +268,7 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
             NSLog("Resolved NetService \"%@\" in \"%@\"...", service.name, service.domain)
         }
         if pendingServices.contains(service) {
-            pendingServices.remove(at: pendingServices.index(of: service)!)
+            pendingServices.remove(at: pendingServices.firstIndex(of: service)!)
         }
         if !domains.contains(service.domain) {
             domains.append(service.domain)
