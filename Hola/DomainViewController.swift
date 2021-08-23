@@ -210,12 +210,14 @@ class DomainViewController: UITableViewController {
 
     /// Get the network SSID, if possible
     ///
-    /// - Returns: the network SSID or nil
+    /// - Returns: the network SSID or nil (always nil if not on Catalyst 14 or newer)
     func getSSID() -> String? {
-        if let interfaces = CNCopySupportedInterfaces() as? [CFString],
-            interfaces.count > 0,
-            let interfaceData = (CNCopyCurrentNetworkInfo(interfaces[0])) as? [String: AnyObject] {
-            return interfaceData["SSID"] as? String
+        if #available(macCatalyst 14.0, *) {
+            if let interfaces = CNCopySupportedInterfaces() as? [CFString],
+               interfaces.count > 0,
+               let interfaceData = (CNCopyCurrentNetworkInfo(interfaces[0])) as? [String: AnyObject] {
+                return interfaceData["SSID"] as? String
+            }
         }
         return nil
     }
