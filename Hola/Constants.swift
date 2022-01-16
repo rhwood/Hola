@@ -14,9 +14,3 @@ struct ServiceType {
     // and scroll to Tim Berners Lee's comments on the HTTPS entry without associated port
     static let HTTPS = "_https._tcp."
 }
-
-struct Domain {
-    static let Root = "." // returned as domain for any types returned when searching for SERVICES
-    static let Default = "" // use default instead of "local."
-    static let Local = "local." // the local domain, handled as "" in app
-}

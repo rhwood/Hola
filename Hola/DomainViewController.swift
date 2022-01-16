@@ -13,18 +13,6 @@ import SystemConfiguration.CaptiveNetwork
 
 class DomainViewController: UITableViewController {
 
-    private var domains: [String] {
-        return BrowserManager.shared.domains
-    }
-    private var serviceKeys: [String: [String]] {
-        return BrowserManager.shared.serviceKeys
-    }
-    private var services: [String: [String: NetService]] {
-        return BrowserManager.shared.services
-    }
-    private var urls: [String: URL] {
-        return BrowserManager.shared.urls
-    }
     private var didEndSearchingObserver: Any?
     private var didRemoveServiceObserver: Any?
     private var didResolveServiceObserver: Any?
@@ -80,9 +68,7 @@ class DomainViewController: UITableViewController {
     }
 
     func setTitle() {
-        title = domains.count != 1
-            ? NSLocalizedString("VIEW_TITLE", comment: "title if showing multiple or zero domains")
-            : self.getTitle(domains[0])
+        title = "Foo"
     }
 
     // MARK: - Segues
@@ -94,72 +80,23 @@ class DomainViewController: UITableViewController {
     // MARK: - Table View
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return domains.count > 1 ? domains.count : 1
+        1
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section < domains.count && domains.count > 1 {
-            return self.getTitle(domains[section])
-        }
-        return ""
+        ""
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if domains.count > section {
-            let domain = domains[section]
-            if let domainServices = BrowserManager.shared.services[domain] {
-                return domainServices.count >= 0 ? domainServices.count : 0
-            }
-        }
-        return 1
+        1
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        if domains.count > 0,
-            urls.count > 0,
-            let domainKey = domains[indexPath.section] as String?,
-            let domain = services[domainKey],
-            domain.count > 0,
-            serviceKeys[domainKey] != nil,
-            let serviceKey = serviceKeys[domainKey]?[indexPath.row],
-            let url = urls[serviceKey],
-            let service = domain[serviceKey] {
-            cell.textLabel!.text = service.name
-            cell.detailTextLabel!.text = url.absoluteString
-            cell.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
-        } else if BrowserManager.shared.searching > 0 {
-            cell.textLabel!.text = NSLocalizedString("SEARCHING", comment: "Cell title with active searches")
-            cell.detailTextLabel!.text = nil
-            cell.accessoryType = UITableViewCell.AccessoryType.none
-        } else {
-            cell.textLabel!.text = NSLocalizedString("NO_SERVICES_CELL_TITLE", comment: "Cell title with no services")
-            cell.detailTextLabel!.text = NSLocalizedString("NO_SERVICES_CELL_DETAIL",
-                                                           comment: "Cell details with no services")
-            cell.accessoryType = UITableViewCell.AccessoryType.detailButton
-        }
         return cell
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        if domains.count > 0 {
-            // open sheet with details that allows site to be opened?
-        } else {
-            let network = getSSID()
-            let message = String.localizedStringWithFormat(
-                NSLocalizedString("NO_SERVICES_ALERT_MESSAGE",
-                                  comment: "No services found alert message - replacement is network name"),
-                network ?? NSLocalizedString("THIS_NETWORK", comment: "Network name for unknown network"))
-            let alert = UIAlertController(
-                title: NSLocalizedString("NO_SERVICES_ALERT_TITLE", comment: "No services found alert title"),
-                message: message,
-                preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(
-                title: NSLocalizedString("NO_SERVICES_ALERT_OK_ACTION", comment: "No services found alert OK action"),
-                style: UIAlertAction.Style.default,
-                handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -168,27 +105,6 @@ class DomainViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if domains.count == 0 ||
-            services[domains[indexPath.section]] == nil ||
-            services[domains[indexPath.section]]?.count == 0 {
-            tableView.deselectRow(at: indexPath, animated: true)
-        } else {
-            if let key = serviceKeys[domains[indexPath.section]]?[indexPath.row],
-                let url = urls[key] {
-                let controller: SFSafariViewController
-                if #available(iOS 11.0, *) {
-                    let configuration = SFSafariViewController.Configuration()
-                    configuration.barCollapsingEnabled = true
-                    controller = SFSafariViewController.init(url: url, configuration: configuration)
-                } else {
-                    controller = SFSafariViewController.init(url: url)
-                }
-                if #available(iOS 10.0, *) {
-                    controller.preferredControlTintColor = self.view.tintColor
-                }
-                present(controller, animated: true)
-            }
-        }
     }
 
     // MARK: - Utilities
