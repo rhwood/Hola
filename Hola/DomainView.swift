@@ -39,12 +39,15 @@ struct DomainView: View {
                 }
                 .navigationBarTitle("Services")
                 .listStyle(PlainListStyle())
-                .navigationBarItems(trailing:
-                                        NavigationLink(destination: SettingsView()) {
-                    Image(systemName: "gear")
-                })
                 .onAppear(perform: { browser.search() })
                 .onDisappear(perform: { browser.stop() })
+                .toolbar {
+                    ToolbarItem {
+                        NavigationLink(destination: SettingsView()) {
+                            Image(systemName: "gear")
+                        }
+                    }
+                }
             }
         }
     }
