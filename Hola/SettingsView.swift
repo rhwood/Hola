@@ -49,7 +49,10 @@ struct SettingsView: View {
                 } header: {
                     Text("About")
                 }
-            }.listStyle(.grouped)
+            }
+            .listStyle(.grouped)
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
