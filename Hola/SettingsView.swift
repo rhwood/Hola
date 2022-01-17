@@ -26,10 +26,7 @@ struct SettingsView: View {
                     Button(action: {
                         onMail.toggle()
                     }) {
-                        HStack {
-                            Text("Email")
-                            Text("support@alexandriasoftware.com")
-                        }
+                        Text("Get Help")
                     }.sheet(isPresented: $onMail) { MailComposeViewController(toReceipents: ["support@alexandriasoftware.com"], messageBody: "", didFinish: {})
                     }
                 } header: {
