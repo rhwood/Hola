@@ -50,7 +50,6 @@ struct SettingsView: View {
                     Text("About")
                 }
             }
-            .listStyle(.grouped)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
         }

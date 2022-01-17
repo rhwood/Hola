@@ -38,7 +38,6 @@ struct DomainView: View {
                     }
                 }
                 .navigationBarTitle("Services")
-                .listStyle(PlainListStyle())
                 .onAppear(perform: { browser.search() })
                 .onDisappear(perform: { browser.stop() })
                 .toolbar {
