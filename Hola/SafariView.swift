@@ -12,16 +12,14 @@ import SwiftUI
 struct SafariView: UIViewControllerRepresentable {
 
     let url: URL
-    @Binding var showing: Bool
+    @Binding var showing: URL?
 
     func makeUIViewController(context: UIViewControllerRepresentableContext<SafariView>) -> SFSafariViewController {
         let configuration = SFSafariViewController.Configuration()
         configuration.barCollapsingEnabled = true
         let controller = SFSafariViewController(url: url, configuration: configuration)
         controller.delegate = context.coordinator
-        if let color = Color("AccentColor").cgColor {
-            controller.preferredControlTintColor = UIColor(cgColor: color)
-        }
+        controller.preferredControlTintColor = UIColor(Color.accentColor)
         return controller
     }
 
@@ -34,22 +32,23 @@ struct SafariView: UIViewControllerRepresentable {
     }
 
     class Coordinator: NSObject, SFSafariViewControllerDelegate {
-        @Binding var showing: Bool
+        @Binding var showing: URL?
 
-        init(showing: Binding<Bool>) {
+        init(showing: Binding<URL?>) {
             self._showing = showing
         }
 
         func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-            self.showing = false
+            self.showing = nil
         }
     }
 }
 
 struct SafariView_Previews: PreviewProvider {
-    @State static var isShowing = true
+    static let url = URL(string: "http://apple.com")!
+    @State static var isShowing: URL? = url
 
     static var previews: some View {
-        SafariView(url: URL(string: "http://apple.com")!, showing: $isShowing)
+        SafariView(url: url, showing: $isShowing)
     }
 }

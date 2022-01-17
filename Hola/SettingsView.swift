@@ -9,43 +9,48 @@
 import SwiftUI
 
 struct SettingsView: View {
-
-    @State var onSafari = false
+    
+    @State var onMail = false
+    @State var safariUrl: URL?
+    let privacyPolicyUrl = URL(string: NSLocalizedString("PRIVACY_POLICY_URL", comment: "Privacy policy URL"))!
     let shortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     let longVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
-
+    
     var body: some View {
-        List {
-            Section {
-                NavigationLink {
-                    
-                } label: {
-                    HStack {
-                        Text("Email")
-                        Text("support@alexandriasoftware.com")
+        if let url = safariUrl {
+            SafariView(url: url, showing: $safariUrl)
+                .navigationBarHidden(true)
+        } else {
+            List {
+                Section {
+                    Button(action: {
+                        onMail.toggle()
+                    }) {
+                        HStack {
+                            Text("Email")
+                            Text("support@alexandriasoftware.com")
+                        }
+                    }.sheet(isPresented: $onMail) { MailComposeViewController(toReceipents: ["support@alexandriasoftware.com"], messageBody: "", didFinish: {})
                     }
+                } header: {
+                    Text("Contact Us")
                 }
-            } header: {
-                Text("Contact Us")
-            }
-            Section {
-                NavigationLink(isActive: $onSafari,
-                               destination: {
-                    SafariView(url: URL(string: NSLocalizedString("PRIVACY_POLICY_URL", comment: "Privacy policy URL"))!, showing: $onSafari)
-                        .navigationBarHidden(true)
-                },
-                               label: {
-                    Text("Privacy Policy")
-                })
-                HStack {
-                    Text("Version")
-                    Spacer()
-                    Text("\(shortVersion) (\(longVersion))")
+                Section {
+                    Button(action: {
+                        safariUrl = privacyPolicyUrl
+                    }) {
+                        Text("Privacy Policy")
+                    }
+                    HStack {
+                        Text("Version")
+                        Spacer()
+                        Text("\(shortVersion) (\(longVersion))")
+                    }
+                } header: {
+                    Text("About")
                 }
-            } header: {
-                Text("About")
-            }
-        }.listStyle(.grouped)
+            }.listStyle(.grouped)
+        }
     }
 }
 

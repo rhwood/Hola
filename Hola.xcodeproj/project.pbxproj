@@ -11,6 +11,7 @@
 		4835E18D2052BB1A000D9C0E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4835E18F2052BB1A000D9C0E /* Localizable.strings */; };
 		48399E0F279454DD00A3BD81 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48399E0E279454DD00A3BD81 /* SettingsView.swift */; };
 		4842950E1F6F1906006E70C4 /* Hola-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4842950D1F6F1906006E70C4 /* Hola-Logo.png */; };
+		4874CA5C2794C45E0098D362 /* MailComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4874CA5B2794C45E0098D362 /* MailComposeView.swift */; };
 		487A5C042142869300F06216 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A5C032142869300F06216 /* Constants.swift */; };
 		4884E77E2157D83700E80770 /* BrowserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4884E77D2157D83700E80770 /* BrowserManager.swift */; };
 		488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D311F6DCDD4008559A8 /* DomainViewController.swift */; };
@@ -47,6 +48,7 @@
 		4835E1912052BB7F000D9C0E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		48399E0E279454DD00A3BD81 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4842950D1F6F1906006E70C4 /* Hola-Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Hola-Logo.png"; sourceTree = "<group>"; };
+		4874CA5B2794C45E0098D362 /* MailComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposeView.swift; sourceTree = "<group>"; };
 		487A5C032142869300F06216 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4884E77D2157D83700E80770 /* BrowserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserManager.swift; sourceTree = "<group>"; };
 		488F1D2C1F6DCDD4008559A8 /* Hola.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hola.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +132,7 @@
 				480030FE27933CD600F6FA50 /* SafariView.swift */,
 				48399E0E279454DD00A3BD81 /* SettingsView.swift */,
 				4884E77D2157D83700E80770 /* BrowserManager.swift */,
+				4874CA5B2794C45E0098D362 /* MailComposeView.swift */,
 			);
 			path = Hola;
 			sourceTree = "<group>";
@@ -301,6 +304,7 @@
 				488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */,
 				48399E0F279454DD00A3BD81 /* SettingsView.swift in Sources */,
 				48FEBDC7207F656C00785305 /* SettingsViewController.swift in Sources */,
+				4874CA5C2794C45E0098D362 /* MailComposeView.swift in Sources */,
 				48905CBE278EF78100AF1B41 /* DomainView.swift in Sources */,
 				48905CBC278EF69C00AF1B41 /* HolaApp.swift in Sources */,
 				487A5C042142869300F06216 /* Constants.swift in Sources */,

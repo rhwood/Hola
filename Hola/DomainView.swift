@@ -9,40 +9,43 @@
 import SwiftUI
 
 struct DomainView: View {
-
+    
     @State var onSafari = false
+    @State var safariUrl: URL?
     @EnvironmentObject var browser: BrowserManager
-
+    
     var body: some View {
         NavigationView {
-            List(browser.services.filter({ !$0.key.isEmpty }).sorted(by: { $0.name < $1.name }), id:\.key) { service in
-                if let url = service.url {
-                    NavigationLink(isActive: $onSafari,
-                                   destination: {
-                        SafariView(url: url, showing: $onSafari)
-                            .navigationBarHidden(true)
-                    },
-                                   label: {
-                        VStack(alignment: .leading) {
-                            Text(service.name).font(.system(.headline))
-                            Text(url.absoluteString).font(.system(.subheadline))
+            if let url = safariUrl {
+                SafariView(url: url, showing: $safariUrl)
+                    .navigationBarHidden(true)
+            } else {
+                List(browser.services.filter({ !$0.key.isEmpty }).sorted(by: { $0.name < $1.name }), id:\.key) { service in
+                    if let url = service.url {
+                        Button(action: {
+                            safariUrl = url
+                        }) {
+                            VStack(alignment: .leading) {
+                                Text(service.name).font(.system(.headline))
+                                Text(url.absoluteString).font(.system(.subheadline))
+                            }
                         }
-                    })
-                } else {
-                    VStack(alignment: .leading) {
-                        Text(service.name)
-                        Text("Unable to view.")
+                    } else {
+                        VStack(alignment: .leading) {
+                            Text(service.name)
+                            Text("Unable to view.")
+                        }
                     }
                 }
+                .navigationBarTitle("Services")
+                .listStyle(PlainListStyle())
+                .navigationBarItems(trailing:
+                                        NavigationLink(destination: SettingsView()) {
+                    Image(systemName: "gear")
+                })
+                .onAppear(perform: { browser.search() })
+                .onDisappear(perform: { browser.stop() })
             }
-            .navigationBarTitle("Services")
-            .listStyle(PlainListStyle())
-            .navigationBarItems(trailing:
-                                    NavigationLink(destination: SettingsView()) {
-                Image(systemName: "gear")
-            })
-            .onAppear(perform: { browser.search() })
-            .onDisappear(perform: { browser.stop() })
         }
     }
 }
