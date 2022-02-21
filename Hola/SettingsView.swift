@@ -10,12 +10,14 @@ import SwiftUI
 
 struct SettingsView: View {
     
+    @Environment(\.openURL) private var openURL
     @State var onMail = false
     @State var safariUrl: URL?
     let privacyPolicyUrl = URL(string: NSLocalizedString("PRIVACY_POLICY_URL", comment: "Privacy policy URL"))!
     let shortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     let longVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
     
+
     var body: some View {
         if let url = safariUrl {
             SafariView(url: url, showing: $safariUrl)
@@ -24,11 +26,22 @@ struct SettingsView: View {
             List {
                 Section {
                     Button(action: {
-                        onMail.toggle()
+                        if let url = URL(string: "mailto:support@alexandriasoftware.com?subject=Hola! (\(shortVersion) (\(longVersion))) Feedback".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!) {
+                            openURL(url) { accepted in
+                                if !accepted {
+                                    onMail = true
+                                }
+                            }
+                        }
                     }) {
                         Text("Get Help")
-                    }.sheet(isPresented: $onMail) { MailComposeViewController(toReceipents: ["support@alexandriasoftware.com"], messageBody: "", didFinish: {})
                     }
+                    .alert("Unable to use email.", isPresented: $onMail) {
+                        Button("OK", role: .cancel) { }
+                    } message: {
+                        Text("Cannot open app to send email to support@alexandriasoftware.com.")
+                    }
+
                 } header: {
                     Text("Contact Us")
                 }
