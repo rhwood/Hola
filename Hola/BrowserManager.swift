@@ -95,7 +95,7 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
     // MARK: - Published Methods
 
     func search() {
-        searchForDomain(false)
+        searchForDomain()
 //        // DO NOT use browsers until able to get URL from NWBrowser.Result
 //        if browsers.isEmpty {
 //            ["_http._tcp.", "_https._tcp."].forEach {
@@ -126,15 +126,9 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
         search()
     }
 
-    /// Search for browsable or registration domains
-    ///
-    /// - Parameter registration: true if searching for a registration domain, false otherwise
-    private func searchForDomain(_ registration: Bool) {
-        if registration {
-            domainBrowser.searchForRegistrationDomains()
-        } else {
-            domainBrowser.searchForBrowsableDomains()
-        }
+    /// Search for browsable domains
+    private func searchForDomain() {
+        domainBrowser.searchForBrowsableDomains()
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(2000), execute: {
             self.nsbLogger.debug("Giving up on finding anything...")
             self.searching -= 1
