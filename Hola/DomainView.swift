@@ -22,11 +22,11 @@ struct DomainView: View {
                 } else {
                     VStack(alignment: .leading) {
                         Text(service.name)
-                        Text("Unable to view.")
+                        Text(LocalizedStringKey("UNABLE_TO_VIEW"))
                     }
                 }
             }
-            .navigationBarTitle("Services")
+            .navigationBarTitle(LocalizedStringKey("VIEW_TITLE"))
             .onAppear(perform: { browser.search() })
             .onDisappear(perform: { browser.stop() })
             .toolbar {

@@ -30,22 +30,23 @@ struct SettingsView: View {
                         }
                     }
                 }) {
-                    Text("Get Help")
+                    Text(LocalizedStringKey("GET_HELP"))
                 }
-                .alert("Unable to get help.", isPresented: $onMail) {
-                    Button("OK", role: .cancel) { }
+                .alert(LocalizedStringKey("GET_HELP_ERROR_TITLE"), isPresented: $onMail) {
+                    Button(LocalizedStringKey("OK"), role: .cancel) { }
+                    .tint(Color.accentColor)
                 } message: {
-                    Text("Cannot send email to support@alexandriasoftware.com.")
+                    Text(LocalizedStringKey("GET_HELP_ERROR_MESSAGE"))
                 }
                 
             } header: {
-                Text("Contact Us")
+                Text(LocalizedStringKey("CONTACT_US"))
             }
             Section {
                 Button(action: {
                     self.onSafari = true
                 }) {
-                    Text("Privacy Policy")
+                    Text(LocalizedStringKey("PRIVACY_POLICY"))
                 }
                 .safariView(isPresented: $onSafari) {
                     SafariView(
@@ -59,17 +60,17 @@ struct SettingsView: View {
                         .preferredControlTintColor(UIColor(named: "AccentColor"))
                 }
                 HStack {
-                    Text("Version")
+                    Text(LocalizedStringKey("VERSION"))
                     Spacer()
                     Text("\(shortVersion) (\(longVersion))")
                 }
             } header: {
-                Text("About")
+                Text(LocalizedStringKey("ABOUT"))
             } footer: {
-                Text("Copyright © 2018, 2022 Randall Wood DBA Alexandria Software. All rights reserved.")
+                Text(LocalizedStringKey("COPYRIGHT_STATEMENT"))
             }
         }
-        .navigationTitle("Settings")
+        .navigationTitle(LocalizedStringKey("SETTINGS"))
         .navigationBarTitleDisplayMode(.inline)
     }
 }

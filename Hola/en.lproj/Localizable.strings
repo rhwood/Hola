@@ -3,8 +3,12 @@
   Hola
 
   Created by Randall Wood on 3/9/18.
-  Copyright © 2018 Alexandria Software. All rights reserved.
+  Copyright © 2018, 2022 Alexandria Software. All rights reserved.
 */
+
+/*
+ * DomainView
+ */
 
 /* title if showing multiple or zero domains */
 "VIEW_TITLE" = "Services";
@@ -38,16 +42,45 @@ Ensure you are on the desired network and expected services, applications, or de
 /* Network name for unknown network */
 "THIS_NETWORK" = "this network";
 
+/* Unable to view service because unable to create URL */
+"UNABLE_TO_VIEW" = "Unable to view.";
+
+/*
+ * SettingsView
+ */
+
+/* Contact Us */
+"CONTACT_US" = "Contact Us";
+
+/* Get help */
+"GET_HELP" = "Get Help";
+
 /* Alert title with no email */
-"NO_EMAIL_TITLE" = "Unable to Send Email";
+"GET_HELP_ERROR_TITLE" = "Unable to get help.";
 
 /* Alert message with no email */
-"NO_EMAIL_MESSAGE" = "This %@ does not appear to be configured to send email.
+"GET_HELP_ERROR_MESSAGE" = "Unable to send email to support@alexandriasoftware.com.
 
 Please contact us using a different device or computer.";
 
 /* Default action */
 "OK" = "OK";
 
+/* Privacy policy */
+"PRIVACY_POLICY" = "Privacy Policy";
+
 /* Privacy policy URL */
 "PRIVACY_POLICY_URL" = "https://www.iubenda.com/privacy-policy/77724957";
+
+/* Copyright Statement */
+"COPYRIGHT_STATEMENT" = "Copyright © 2017-2022 Randall Wood DBA Alexandria Software. All rights reserved.";
+
+/* Settings */
+"SETTINGS" = "Settings";
+
+/* About */
+"ABOUT" = "About";
+
+/* Version */
+"VERSION" = "Version";
+
