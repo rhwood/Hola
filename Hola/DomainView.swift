@@ -7,47 +7,64 @@
 //
 
 import SwiftUI
+import BetterSafariView
 
 struct DomainView: View {
     
-    @State var onSafari = false
     @State var safariUrl: URL?
     @EnvironmentObject var browser: BrowserManager
     
     var body: some View {
         NavigationView {
-            if let url = safariUrl {
-                SafariView(url: url, showing: $safariUrl)
-                    .navigationBarHidden(true)
-            } else {
-                List(browser.services.filter({ !$0.key.isEmpty }).sorted(by: { $0.name < $1.name }), id:\.key) { service in
-                    if let url = service.url {
-                        Button(action: {
-                            safariUrl = url
-                        }) {
-                            VStack(alignment: .leading) {
-                                Text(service.name).font(.system(.headline))
-                                Text(url.absoluteString).font(.system(.subheadline))
-                            }
-                        }
-                    } else {
-                        VStack(alignment: .leading) {
-                            Text(service.name)
-                            Text("Unable to view.")
-                        }
-                    }
-                }
-                .navigationBarTitle("Services")
-                .onAppear(perform: { browser.search() })
-                .onDisappear(perform: { browser.stop() })
-                .toolbar {
-                    ToolbarItem {
-                        NavigationLink(destination: SettingsView()) {
-                            Image(systemName: "gear")
-                        }
+            List(browser.services.filter({ !$0.key.isEmpty }).sorted(by: { $0.name < $1.name }), id:\.key) { service in
+                if let url = service.url {
+                    UrlButton(url: url, name: service.name)
+                } else {
+                    VStack(alignment: .leading) {
+                        Text(service.name)
+                        Text("Unable to view.")
                     }
                 }
             }
+            .navigationBarTitle("Services")
+            .onAppear(perform: { browser.search() })
+            .onDisappear(perform: { browser.stop() })
+            .toolbar {
+                ToolbarItem {
+                    NavigationLink(destination: SettingsView()) {
+                        Image(systemName: "gear")
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct UrlButton: View {
+
+    var url: URL
+    var name: String
+    @State var onSafari = false
+
+    var body: some View {
+        Button(action: {
+            onSafari = true
+        }) {
+            VStack(alignment: .leading) {
+                Text(name).font(.system(.headline))
+                Text(url.absoluteString).font(.system(.subheadline))
+            }
+        }
+        .safariView(isPresented: $onSafari) {
+            SafariView(
+                url: url,
+                configuration: SafariView.Configuration(
+                    entersReaderIfAvailable: false,
+                    barCollapsingEnabled: true
+                )
+            )
+                // https://github.com/stleamist/BetterSafariView/issues/16
+                .preferredControlTintColor(UIColor(named: "AccentColor"))
         }
     }
 }

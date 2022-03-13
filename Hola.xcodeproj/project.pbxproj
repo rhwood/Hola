@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		480030FF27933CD600F6FA50 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480030FE27933CD600F6FA50 /* SafariView.swift */; };
 		4835E18D2052BB1A000D9C0E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4835E18F2052BB1A000D9C0E /* Localizable.strings */; };
 		48399E0F279454DD00A3BD81 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48399E0E279454DD00A3BD81 /* SettingsView.swift */; };
 		4842950E1F6F1906006E70C4 /* Hola-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4842950D1F6F1906006E70C4 /* Hola-Logo.png */; };
+		484EAC3227DD589E009561A0 /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 484EAC3127DD589E009561A0 /* BetterSafariView */; };
 		487A5C042142869300F06216 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A5C032142869300F06216 /* Constants.swift */; };
 		4884E77E2157D83700E80770 /* BrowserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4884E77D2157D83700E80770 /* BrowserManager.swift */; };
 		488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D311F6DCDD4008559A8 /* DomainViewController.swift */; };
@@ -42,7 +42,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		480030FE27933CD600F6FA50 /* SafariView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		4835E18E2052BB1A000D9C0E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4835E1912052BB7F000D9C0E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		48399E0E279454DD00A3BD81 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -72,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				484EAC3227DD589E009561A0 /* BetterSafariView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +127,6 @@
 				48905CBB278EF69C00AF1B41 /* HolaApp.swift */,
 				487A5C032142869300F06216 /* Constants.swift */,
 				48905CBD278EF78100AF1B41 /* DomainView.swift */,
-				480030FE27933CD600F6FA50 /* SafariView.swift */,
 				48399E0E279454DD00A3BD81 /* SettingsView.swift */,
 				4884E77D2157D83700E80770 /* BrowserManager.swift */,
 			);
@@ -169,6 +168,7 @@
 			);
 			name = Hola;
 			packageProductDependencies = (
+				484EAC3127DD589E009561A0 /* BetterSafariView */,
 			);
 			productName = Hola;
 			productReference = 488F1D2C1F6DCDD4008559A8 /* Hola.app */;
@@ -252,6 +252,7 @@
 			);
 			mainGroup = 488F1D231F6DCDD4008559A8;
 			packageReferences = (
+				484EAC3027DD589E009561A0 /* XCRemoteSwiftPackageReference "BetterSafariView" */,
 			);
 			productRefGroup = 488F1D2D1F6DCDD4008559A8 /* Products */;
 			projectDirPath = "";
@@ -305,7 +306,6 @@
 				48905CBC278EF69C00AF1B41 /* HolaApp.swift in Sources */,
 				487A5C042142869300F06216 /* Constants.swift in Sources */,
 				4884E77E2157D83700E80770 /* BrowserManager.swift in Sources */,
-				480030FF27933CD600F6FA50 /* SafariView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -656,6 +656,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		484EAC3027DD589E009561A0 /* XCRemoteSwiftPackageReference "BetterSafariView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stleamist/BetterSafariView.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 2.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		484EAC3127DD589E009561A0 /* BetterSafariView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 484EAC3027DD589E009561A0 /* XCRemoteSwiftPackageReference "BetterSafariView" */;
+			productName = BetterSafariView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 488F1D241F6DCDD4008559A8 /* Project object */;
 }
