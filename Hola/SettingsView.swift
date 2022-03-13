@@ -32,10 +32,10 @@ struct SettingsView: View {
                 }) {
                     Text("Get Help")
                 }
-                .alert("Unable to use email.", isPresented: $onMail) {
+                .alert("Unable to get help.", isPresented: $onMail) {
                     Button("OK", role: .cancel) { }
                 } message: {
-                    Text("Cannot open app to send email to support@alexandriasoftware.com.")
+                    Text("Cannot send email to support@alexandriasoftware.com.")
                 }
                 
             } header: {
@@ -65,6 +65,8 @@ struct SettingsView: View {
                 }
             } header: {
                 Text("About")
+            } footer: {
+                Text("Copyright © 2018, 2022 Randall Wood DBA Alexandria Software. All rights reserved.")
             }
         }
         .navigationTitle("Settings")
