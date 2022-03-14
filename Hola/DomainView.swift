@@ -26,6 +26,15 @@ struct DomainView: View {
                     }
                 }
             }
+            .emptyState(browser.services.isEmpty) {
+                VStack {
+                    if browser.searching > 0 { // is searching
+                        Text(LocalizedStringKey("SEARCHING"))
+                    } else { // not searching
+                        Text(LocalizedStringKey("NO_SERVICES_CELL_TITLE"))
+                    }
+                }
+            }
             .refreshable {
                 browser.refresh()
             }

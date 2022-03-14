@@ -20,6 +20,7 @@
 		488F1D521F6DCDD4008559A8 /* HolaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D511F6DCDD4008559A8 /* HolaUITests.swift */; };
 		48905CBC278EF69C00AF1B41 /* HolaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48905CBB278EF69C00AF1B41 /* HolaApp.swift */; };
 		48905CBE278EF78100AF1B41 /* DomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48905CBD278EF78100AF1B41 /* DomainView.swift */; };
+		48A5A44427DE993A000222D9 /* EmptyStateViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A5A44327DE993A000222D9 /* EmptyStateViewModifier.swift */; };
 		48D830A3205A765300F21F74 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 48D830A2205A765200F21F74 /* Default-568h@2x.png */; };
 		48FEBDC7207F656C00785305 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FEBDC6207F656C00785305 /* SettingsViewController.swift */; };
 /* End PBXBuildFile section */
@@ -61,6 +62,7 @@
 		488F1D531F6DCDD4008559A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48905CBB278EF69C00AF1B41 /* HolaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolaApp.swift; sourceTree = "<group>"; };
 		48905CBD278EF78100AF1B41 /* DomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainView.swift; sourceTree = "<group>"; };
+		48A5A44327DE993A000222D9 /* EmptyStateViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateViewModifier.swift; sourceTree = "<group>"; };
 		48D830A2205A765200F21F74 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		48EDAB9324410889005B25D3 /* Hola.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hola.entitlements; sourceTree = "<group>"; };
 		48FEBDC6207F656C00785305 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				48905CBD278EF78100AF1B41 /* DomainView.swift */,
 				48399E0E279454DD00A3BD81 /* SettingsView.swift */,
 				4884E77D2157D83700E80770 /* BrowserManager.swift */,
+				48A5A44327DE993A000222D9 /* EmptyStateViewModifier.swift */,
 			);
 			path = Hola;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 			files = (
 				488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */,
 				48399E0F279454DD00A3BD81 /* SettingsView.swift in Sources */,
+				48A5A44427DE993A000222D9 /* EmptyStateViewModifier.swift in Sources */,
 				48FEBDC7207F656C00785305 /* SettingsViewController.swift in Sources */,
 				48905CBE278EF78100AF1B41 /* DomainView.swift in Sources */,
 				48905CBC278EF69C00AF1B41 /* HolaApp.swift in Sources */,
