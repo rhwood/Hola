@@ -26,6 +26,9 @@ struct DomainView: View {
                     }
                 }
             }
+            .refreshable {
+                browser.refresh()
+            }
             .navigationBarTitle(LocalizedStringKey("VIEW_TITLE"))
             .onAppear(perform: { browser.search() })
             .onDisappear(perform: { browser.stop() })

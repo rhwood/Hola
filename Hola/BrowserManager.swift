@@ -74,7 +74,7 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
     private var _domainBrowser: NetServiceBrowser?
     public private(set) var servicesBrowsers = [String: NetServiceBrowser]()
     public private(set) var typeBrowsers = [String: [String: NetServiceBrowser]]()
-    public private(set) var searching: Int = 0 {
+    @Published public private(set) var searching: Int = 0 {
         willSet {
             if searching == 0 && newValue >= 1 {
                 NotificationCenter.default.post(name: BrowserManager.didStartSearching, object: self)
@@ -112,16 +112,33 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
 //            }
 //        }
 //        browsers.forEach { $0.start(queue: DispatchQueue.global()) }
+        logger.debug("Started browsers.")
     }
 
     func stop() {
-        servicesBrowsers.forEach { $1.stop() }
+        servicesBrowsers.forEach {
+            $1.stop()
+            $1.delegate = nil
+        }
+        servicesBrowsers.removeAll()
+        typeBrowsers.forEach {
+            $1.forEach {
+                $1.stop()
+                $1.delegate = nil
+            }
+        }
+        typeBrowsers.removeAll()
         domainBrowser.stop()
         browsers.forEach { $0.cancel() }
+        logger.debug("Stopped browsers.")
     }
 
     func refresh() {
         stop()
+        if let browser = _domainBrowser {
+            browser.delegate = nil
+        }
+        services.removeAll()
         _domainBrowser = nil
         search()
     }
@@ -253,8 +270,12 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
             pendingServices.remove(at: pendingServices.firstIndex(of: service)!)
         }
         if let url = url(service) {
-            services.append(HolaService(service: nil, netService: service, url: url))
-            NotificationCenter.default.post(name: BrowserManager.didResolveService, object: self)
+            if !services.contains(where: { existing in
+                existing.key == serviceKey(service)
+            }) {
+                services.append(HolaService(service: nil, netService: service, url: url))
+                NotificationCenter.default.post(name: BrowserManager.didResolveService, object: self)
+            }
             searching -= 1
         }
     }
