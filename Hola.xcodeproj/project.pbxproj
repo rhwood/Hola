@@ -13,7 +13,6 @@
 		484EAC3227DD589E009561A0 /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 484EAC3127DD589E009561A0 /* BetterSafariView */; };
 		487A5C042142869300F06216 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A5C032142869300F06216 /* Constants.swift */; };
 		4884E77E2157D83700E80770 /* BrowserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4884E77D2157D83700E80770 /* BrowserManager.swift */; };
-		488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D311F6DCDD4008559A8 /* DomainViewController.swift */; };
 		488F1D391F6DCDD4008559A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 488F1D381F6DCDD4008559A8 /* Assets.xcassets */; };
 		488F1D3C1F6DCDD4008559A8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 488F1D3A1F6DCDD4008559A8 /* LaunchScreen.storyboard */; };
 		488F1D471F6DCDD4008559A8 /* HolaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1D461F6DCDD4008559A8 /* HolaTests.swift */; };
@@ -22,7 +21,6 @@
 		48905CBE278EF78100AF1B41 /* DomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48905CBD278EF78100AF1B41 /* DomainView.swift */; };
 		48A5A44427DE993A000222D9 /* EmptyStateViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A5A44327DE993A000222D9 /* EmptyStateViewModifier.swift */; };
 		48D830A3205A765300F21F74 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 48D830A2205A765200F21F74 /* Default-568h@2x.png */; };
-		48FEBDC7207F656C00785305 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FEBDC6207F656C00785305 /* SettingsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +48,6 @@
 		487A5C032142869300F06216 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4884E77D2157D83700E80770 /* BrowserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserManager.swift; sourceTree = "<group>"; };
 		488F1D2C1F6DCDD4008559A8 /* Hola.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hola.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		488F1D311F6DCDD4008559A8 /* DomainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainViewController.swift; sourceTree = "<group>"; };
 		488F1D381F6DCDD4008559A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		488F1D3B1F6DCDD4008559A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		488F1D3D1F6DCDD4008559A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -65,7 +62,6 @@
 		48A5A44327DE993A000222D9 /* EmptyStateViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateViewModifier.swift; sourceTree = "<group>"; };
 		48D830A2205A765200F21F74 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		48EDAB9324410889005B25D3 /* Hola.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hola.entitlements; sourceTree = "<group>"; };
-		48FEBDC6207F656C00785305 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,8 +114,6 @@
 			isa = PBXGroup;
 			children = (
 				48EDAB9324410889005B25D3 /* Hola.entitlements */,
-				488F1D311F6DCDD4008559A8 /* DomainViewController.swift */,
-				48FEBDC6207F656C00785305 /* SettingsViewController.swift */,
 				488F1D381F6DCDD4008559A8 /* Assets.xcassets */,
 				4842950D1F6F1906006E70C4 /* Hola-Logo.png */,
 				48D830A2205A765200F21F74 /* Default-568h@2x.png */,
@@ -300,10 +294,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				488F1D321F6DCDD4008559A8 /* DomainViewController.swift in Sources */,
 				48399E0F279454DD00A3BD81 /* SettingsView.swift in Sources */,
 				48A5A44427DE993A000222D9 /* EmptyStateViewModifier.swift in Sources */,
-				48FEBDC7207F656C00785305 /* SettingsViewController.swift in Sources */,
 				48905CBE278EF78100AF1B41 /* DomainView.swift in Sources */,
 				48905CBC278EF69C00AF1B41 /* HolaApp.swift in Sources */,
 				487A5C042142869300F06216 /* Constants.swift in Sources */,

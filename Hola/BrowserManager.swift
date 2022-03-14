@@ -58,12 +58,6 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
     let nsbLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "NSBBrowser")
     private var browsers: [NWBrowser] = []
 
-    static public let shared = BrowserManager()
-    static public let didStartSearching = Notification.Name(rawValue: "BrowserManager.DidStartSearching")
-    static public let didEndSearching = Notification.Name(rawValue: "BrowserManager.DidEndSearching")
-    static public let didRemoveService = Notification.Name(rawValue: "BrowserManager.DidRemoveService")
-    static public let didResolveService = Notification.Name(rawValue: "BrowserManager.DidResolveService")
-
     private var domainBrowser: NetServiceBrowser {
         if _domainBrowser == nil {
             _domainBrowser = NetServiceBrowser()
@@ -75,18 +69,10 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
     public private(set) var servicesBrowsers = [String: NetServiceBrowser]()
     public private(set) var typeBrowsers = [String: [String: NetServiceBrowser]]()
     @Published public private(set) var searching: Int = 0 {
-        willSet {
-            if searching == 0 && newValue >= 1 {
-                NotificationCenter.default.post(name: BrowserManager.didStartSearching, object: self)
-            }
-        }
         didSet {
             nsbLogger.debug("\(self.searching) active searches...")
             if searching < 0 {
                 searching = 0
-            }
-            if searching == 0 {
-                NotificationCenter.default.post(name: BrowserManager.didEndSearching, object: self)
             }
         }
     }
@@ -207,7 +193,6 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
         nsbLogger.debug("Removing NetService \"\(service.name)\" from \"\(service.domain)\"...")
         if let key = serviceKey(service) {
             services = services.filter({ $0.key != key })
-            NotificationCenter.default.post(name: BrowserManager.didRemoveService, object: self)
         } else {
             nsbLogger.error("Unknown NetService \"\(service.name)\" on host \"\(service.hostName ?? "no hostname")\" from \"\(service.domain)\"...")
             // reset and start over
@@ -274,7 +259,6 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
                 existing.key == serviceKey(service)
             }) {
                 services.append(HolaService(service: nil, netService: service, url: url))
-                NotificationCenter.default.post(name: BrowserManager.didResolveService, object: self)
             }
             searching -= 1
         }
