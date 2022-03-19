@@ -183,9 +183,8 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
             }
             searching -= 1
         }
-        // NOTE: when adding handlers for more than just HTTP, remember to properly decrement searching
         if !moreComing {
-            searching = 0
+            searching -= 1
         }
     }
 
@@ -200,7 +199,7 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
             return // do not check against moreComing to halt refresh
         }
         if !moreComing {
-            searching = 0
+            searching -= 1
         }
     }
 
@@ -229,7 +228,7 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
         }
         searching -= 1
         if !moreComing {
-            searching = 0
+            searching -= 1
         }
     }
 
@@ -243,7 +242,7 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
             typeBrowsers.removeValue(forKey: domainString)
         }
         if !moreComing {
-            searching = 0
+            searching -= 1
         }
     }
 
