@@ -294,4 +294,17 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
         return "\(service.name).\(service.domain)"
     }
 
+    /// Create the service unique key for a given service, since service URLs can change,
+    /// but service names and domains are immutable within the lifetime of a service in zeroconf
+    /// networking.
+    ///
+    /// - Parameter service: The service to get a key for
+    /// - Returns: the key for the service
+    func serviceKey(_ service: NWBrowser.Result) -> String? {
+        if case let .service(name, _, domain, _) = service.endpoint {
+            return "\(name).\(domain)"
+        }
+        return nil
+    }
+
 }
