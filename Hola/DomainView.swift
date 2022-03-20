@@ -49,6 +49,7 @@ struct DomainView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 
