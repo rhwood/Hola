@@ -15,7 +15,7 @@ struct DomainView: View {
     @State var safariUrl: URL?
     @EnvironmentObject var browser: BrowserManager
     @Environment(\.openURL) var openURL
-
+    
     var body: some View {
         NavigationView {
             List(browser.services.filter({ !$0.key.isEmpty }).sorted(by: { $0.name < $1.name }), id:\.key) { service in
@@ -71,11 +71,11 @@ struct DomainView: View {
 }
 
 struct UrlButton: View {
-
+    
     var url: URL
     var name: String
     @State var onSafari = false
-
+    
     var body: some View {
         Button(action: {
             onSafari = true
@@ -93,8 +93,8 @@ struct UrlButton: View {
                     barCollapsingEnabled: true
                 )
             )
-                // https://github.com/stleamist/BetterSafariView/issues/16
-                .preferredControlTintColor(UIColor(named: "AccentColor"))
+            // https://github.com/stleamist/BetterSafariView/issues/16
+            .preferredControlTintColor(UIColor(named: "AccentColor"))
         }
     }
 }

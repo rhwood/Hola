@@ -17,7 +17,7 @@ struct SettingsView: View {
     let privacyPolicyUrl = URL(string: NSLocalizedString("PRIVACY_POLICY_URL", comment: "Privacy policy URL"))!
     let shortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     let longVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
-
+    
     var body: some View {
         List {
             Section {
@@ -43,7 +43,7 @@ struct SettingsView: View {
                 }
                 .alert(LocalizedStringKey("GET_HELP_ERROR_TITLE"), isPresented: $onMail) {
                     Button(LocalizedStringKey("OK"), role: .cancel) { }
-                    .tint(Color.accentColor)
+                        .tint(Color.accentColor)
                 } message: {
                     Text(LocalizedStringKey("GET_HELP_ERROR_MESSAGE"))
                 }
@@ -64,8 +64,8 @@ struct SettingsView: View {
                             barCollapsingEnabled: true
                         )
                     )
-                        // https://github.com/stleamist/BetterSafariView/issues/16
-                        .preferredControlTintColor(UIColor(named: "AccentColor"))
+                    // https://github.com/stleamist/BetterSafariView/issues/16
+                    .preferredControlTintColor(UIColor(named: "AccentColor"))
                 }
                 HStack {
                     Text(LocalizedStringKey("VERSION"))
