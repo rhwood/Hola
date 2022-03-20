@@ -6,14 +6,16 @@
 //  Copyright © 2022 Alexandria Software. All rights reserved.
 //
 
-import SwiftUI
 import BetterSafariView
+import SwiftUI
+import UIKit
 
 struct DomainView: View {
     
     @State var safariUrl: URL?
     @EnvironmentObject var browser: BrowserManager
-    
+    @Environment(\.openURL) var openURL
+
     var body: some View {
         NavigationView {
             List(browser.services.filter({ !$0.key.isEmpty }).sorted(by: { $0.name < $1.name }), id:\.key) { service in
@@ -33,6 +35,9 @@ struct DomainView: View {
                         Text(LocalizedStringKey("DENIED_BY_PRIVACY_TITLE")).font(.headline)
                             .padding()
                         Text(LocalizedStringKey("DENIED_BY_PRIVACY_DETAIL"))
+                        Button(action: { openURL(URL(string: UIApplication.openSettingsURLString)!) }) {
+                            Text(LocalizedStringKey("DENIED_BY_PRIVACY_BUTTON"))
+                        }.padding()
                     case .searching:
                         Text(LocalizedStringKey("SEARCHING"))
                     case .stopped:

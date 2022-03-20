@@ -18,6 +18,7 @@
 		48905CBC278EF69C00AF1B41 /* HolaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48905CBB278EF69C00AF1B41 /* HolaApp.swift */; };
 		48905CBE278EF78100AF1B41 /* DomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48905CBD278EF78100AF1B41 /* DomainView.swift */; };
 		48A5A44427DE993A000222D9 /* EmptyStateViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A5A44327DE993A000222D9 /* EmptyStateViewModifier.swift */; };
+		48E9393E27E77BA00002F546 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 48E9393D27E77BA00002F546 /* Settings.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		48905CBB278EF69C00AF1B41 /* HolaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolaApp.swift; sourceTree = "<group>"; };
 		48905CBD278EF78100AF1B41 /* DomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainView.swift; sourceTree = "<group>"; };
 		48A5A44327DE993A000222D9 /* EmptyStateViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateViewModifier.swift; sourceTree = "<group>"; };
+		48E9393D27E77BA00002F546 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		48EDAB9324410889005B25D3 /* Hola.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hola.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -86,6 +88,7 @@
 		488F1D231F6DCDD4008559A8 = {
 			isa = PBXGroup;
 			children = (
+				48E9393D27E77BA00002F546 /* Settings.bundle */,
 				488F1D2E1F6DCDD4008559A8 /* Hola */,
 				488F1D451F6DCDD4008559A8 /* HolaTests */,
 				488F1D501F6DCDD4008559A8 /* HolaUITests */,
@@ -256,6 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4835E18D2052BB1A000D9C0E /* Localizable.strings in Resources */,
+				48E9393E27E77BA00002F546 /* Settings.bundle in Resources */,
 				488F1D391F6DCDD4008559A8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
