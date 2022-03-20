@@ -19,6 +19,12 @@
 /* services in default (local) domain */
 "LOCAL_SERVICES" = "Local Services";
 
+/* user has denied permission to browse title */
+"DENIED_BY_PRIVACY_TITLE" = "Not allowed to search.";
+
+/* user has denied permission to browse details */
+"DENIED_BY_PRIVACY_DETAIL" = "Permission to search has been previously denied. Go to Settings -> Privacy -> Local Networks -> Hola to grant permission to search.";
+
 /* Cell title with active seaches */
 "SEARCHING" = "Scanning...";
 

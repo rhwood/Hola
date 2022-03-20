@@ -28,12 +28,18 @@ struct DomainView: View {
             }
             .emptyState(browser.services.isEmpty) {
                 VStack {
-                    if browser.searching > 0 { // is searching
+                    switch browser.state {
+                    case .privacyDenied:
+                        Text(LocalizedStringKey("DENIED_BY_PRIVACY_TITLE")).font(.headline)
+                            .padding()
+                        Text(LocalizedStringKey("DENIED_BY_PRIVACY_DETAIL"))
+                    case .searching:
                         Text(LocalizedStringKey("SEARCHING"))
-                    } else { // not searching
+                    case .stopped:
                         Text(LocalizedStringKey("NO_SERVICES_CELL_TITLE"))
                     }
                 }
+                .padding()
             }
             .refreshable {
                 browser.refresh()

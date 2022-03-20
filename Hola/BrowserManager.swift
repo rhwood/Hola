@@ -52,7 +52,18 @@ public struct HolaService {
 
 class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, ObservableObject {
 
-    @Published var state: NWBrowser.State = .cancelled
+    public enum State {
+        case privacyDenied
+        case searching
+        case stopped
+    }
+    @Published public private(set) var state: State = .stopped {
+        didSet {
+            if state != oldValue && oldValue == .privacyDenied {
+                state = .privacyDenied
+            }
+        }
+    }
     @Published var services: [HolaService] = []
     let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "Browser")
     let nsbLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "NSBBrowser")
@@ -74,6 +85,9 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
             if searching < 0 {
                 searching = 0
             }
+            if searching == 0 {
+                state = .stopped
+            }
         }
     }
     private var pendingServices: [NetService] = []
@@ -81,11 +95,26 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
     // MARK: - Published Methods
 
     func search() {
+        state = .searching
+        // Use NetServiceBrowser until able to get URL from NWBrowser.Result
         searchForDomain()
-//        // DO NOT use browsers until able to get URL from NWBrowser.Result
-//        if browsers.isEmpty {
-//            ["_http._tcp.", "_https._tcp."].forEach {
-//                let browser = NWBrowser(for: .bonjourWithTXTRecord(type: $0, domain: nil), using: NWParameters())
+        if browsers.isEmpty {
+            ["_http._tcp.", "_https._tcp."].forEach {
+                let browser = NWBrowser(for: .bonjourWithTXTRecord(type: $0, domain: nil), using: NWParameters())
+                // Use browser state to inform user of network state
+                browser.stateUpdateHandler = { state in
+                    DispatchQueue.main.async {
+                        switch state {
+                        case .failed(let error):
+                            self.handleError(browser: browser, error: error, prefix: "Failed")
+                        case .waiting(let error):
+                            self.handleError(browser: browser, error: error, prefix: "Waiting")
+                        default:
+                            break
+                        }
+                    }
+                }
+//                // DO NOT use browser results until able to get URL from NWBrowser.Result
 //                browser.browseResultsChangedHandler = { results, changes in
 //                    DispatchQueue.main.async {
 //                        self.services = results.map({ HolaService(service: $0, netService: nil) })
@@ -94,10 +123,10 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
 //                        self.logger.debug("Got \($0.endpoint.debugDescription)")
 //                    }
 //                }
-//                browsers.append(browser)
-//            }
-//        }
-//        browsers.forEach { $0.start(queue: DispatchQueue.global()) }
+                browsers.append(browser)
+            }
+        }
+        browsers.forEach { $0.start(queue: DispatchQueue.global()) }
         logger.debug("Started browsers.")
     }
 
@@ -116,7 +145,9 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
         typeBrowsers.removeAll()
         domainBrowser.stop()
         browsers.forEach { $0.cancel() }
+        browsers.removeAll()
         logger.debug("Stopped browsers.")
+        state = .stopped
     }
 
     func refresh() {
@@ -136,6 +167,16 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
             self.nsbLogger.debug("Giving up on finding anything...")
             self.searching -= 1
         })
+    }
+
+    private func handleError(browser: NWBrowser, error: NWError, prefix: String) {
+        if case let .dns(code) = error, code == kDNSServiceErr_PolicyDenied {
+            self.state = .privacyDenied
+        } else if case let .dns(code) = error, code == kDNSServiceErr_DefunctConnection {
+            self.refresh()
+        } else {
+            self.logger.error("\(prefix): \(error.debugDescription)")
+        }
     }
 
     // MARK: - NetServices Browser
