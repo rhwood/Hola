@@ -34,6 +34,13 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>¡Hola! finds services on your network.</string>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchColor</string>
+		<key>UIImageName</key>
+		<string>LaunchImage</string>
+	</dict>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -56,13 +63,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIImageName</key>
-		<string>LaunchImage</string>
-		<key>UIColorName</key>
-		<string>LaunchColor</string>
-	</dict>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
