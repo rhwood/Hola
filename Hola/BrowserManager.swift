@@ -56,18 +56,34 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
         case privacyDenied
         case searching
         case stopped
+        case noNetwork
     }
+    /// The manager's state.
+    ///
+    /// Unless `forceNextStateChange` is true, `.noNetwork` and `.privacyDenied`
+    /// states are preserved as they are error states.
     @Published public private(set) var state: State = .stopped {
         didSet {
-            if state != oldValue && oldValue == .privacyDenied {
-                state = .privacyDenied
+            if forceNextStateChange {
+                forceNextStateChange = false
+                if state != oldValue && oldValue == .privacyDenied {
+                    state = .privacyDenied
+                    return
+                }
+                if state != oldValue && oldValue == .noNetwork {
+                    state = .noNetwork
+                    return
+                }
             }
         }
     }
+    /// Set to true to prevent state from preserving a .noNetwork or .privacyDenied state
+    private var forceNextStateChange = false
     @Published var services: [HolaService] = []
     let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "Browser")
     let nsbLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "NSBBrowser")
     private var browsers: [NWBrowser] = []
+    private var monitor: NWPathMonitor?
 
     private var domainBrowser: NetServiceBrowser {
         if _domainBrowser == nil {
@@ -96,6 +112,23 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
 
     func search() {
         state = .searching
+        if monitor == nil {
+            monitor = NWPathMonitor(prohibitedInterfaceTypes: [.cellular, .loopback, .other])
+            if let monitor = monitor {
+                monitor.pathUpdateHandler = { path in
+                    DispatchQueue.main.async {
+                        if path.status == .unsatisfied {
+                            self.state = .noNetwork
+                        } else {
+                            self.logger.debug("Network change: \(path.debugDescription)")
+                        }
+                    }
+                }
+            }
+        }
+        if let monitor = monitor {
+            monitor.start(queue: DispatchQueue.global())
+        }
         // Use NetServiceBrowser until able to get URL from NWBrowser.Result
         searchForDomain()
         if browsers.isEmpty {
@@ -147,6 +180,8 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
         browsers.forEach { $0.cancel() }
         browsers.removeAll()
         logger.debug("Stopped browsers.")
+        monitor?.cancel()
+        monitor = nil
         state = .stopped
     }
 
@@ -171,6 +206,7 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
 
     private func handleError(browser: NWBrowser, error: NWError, prefix: String) {
         if case let .dns(code) = error, code == kDNSServiceErr_PolicyDenied {
+            self.forceNextStateChange = true
             self.state = .privacyDenied
         } else if case let .dns(code) = error, code == kDNSServiceErr_DefunctConnection {
             self.refresh()

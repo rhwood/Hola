@@ -19,6 +19,14 @@
 /* services in default (local) domain */
 "LOCAL_SERVICES" = "Local Services";
 
+/* no usable network title */
+"NO_NETWORK_TITLE" = "Not on Wi-Fi.";
+
+/* no usable network detail */
+"NO_NETWORK_DETAIL" = "Not connected to a Wi-Fi network. Cellular networks cannot be browsed for local network services.
+
+Please connect to a Wi-Fi network to browse for services.";
+
 /* user has denied permission to browse title */
 "DENIED_BY_PRIVACY_TITLE" = "Not allowed to search.";
 

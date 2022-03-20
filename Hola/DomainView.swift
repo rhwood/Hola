@@ -31,6 +31,10 @@ struct DomainView: View {
             .emptyState(browser.services.isEmpty) {
                 VStack {
                     switch browser.state {
+                    case .noNetwork:
+                        Text(LocalizedStringKey("NO_NETWORK_TITLE")).font(.headline)
+                            .padding()
+                        Text(LocalizedStringKey("NO_NETWORK_DETAIL"))
                     case .privacyDenied:
                         Text(LocalizedStringKey("DENIED_BY_PRIVACY_TITLE")).font(.headline)
                             .padding()
