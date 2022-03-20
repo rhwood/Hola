@@ -47,6 +47,15 @@ Ensure you are on the desired network and expected services, applications, or de
  * SettingsView
  */
 
+/* Privacy Section */
+"PRIVACY" = "Privacy";
+
+/* Button to open Settings App */
+"SETTINGS_APP" = "Open Settings App";
+
+/* Privacy Controls explaination */
+"PRIVACY_CONTROLS" = "Privacy settings are controlled in the Settings App.";
+
 /* Contact Us */
 "CONTACT_US" = "Contact Us";
 

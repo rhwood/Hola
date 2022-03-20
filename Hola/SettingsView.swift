@@ -21,6 +21,15 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section {
+                Button(action: { openURL(URL(string: UIApplication.openSettingsURLString)!) }) {
+                    Text(LocalizedStringKey("SETTINGS_APP"))
+                }
+            } header: {
+                Text(LocalizedStringKey("PRIVACY"))
+            } footer: {
+                Text(LocalizedStringKey("PRIVACY_CONTROLS"))
+            }
+            Section {
                 Button(action: {
                     if let url = URL(string: "mailto:support@alexandriasoftware.com?subject=Hola! (\(shortVersion) (\(longVersion))) Feedback".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!) {
                         openURL(url) { accepted in
@@ -38,7 +47,6 @@ struct SettingsView: View {
                 } message: {
                     Text(LocalizedStringKey("GET_HELP_ERROR_MESSAGE"))
                 }
-                
             } header: {
                 Text(LocalizedStringKey("CONTACT_US"))
             }
