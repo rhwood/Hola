@@ -39,10 +39,12 @@ struct DomainView: View {
                             Text(LocalizedStringKey("DENIED_BY_PRIVACY_BUTTON"))
                         }.padding()
                     case .searching:
-                        Text(LocalizedStringKey("SEARCHING"))
+                        ProgressView().scaleEffect(2.0).padding()
                     case .stopped:
-                        Text(LocalizedStringKey("NO_SERVICES_CELL_TITLE"))
+                        Text(LocalizedStringKey("NO_SERVICES_TITLE")).font(.headline).padding()
+                        Text(LocalizedStringKey("NO_SERVICES_DETAIL"))
                     }
+                    Spacer()
                 }
                 .padding()
             }

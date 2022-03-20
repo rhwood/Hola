@@ -23,28 +23,17 @@
 "DENIED_BY_PRIVACY_TITLE" = "Not allowed to search.";
 
 /* user has denied permission to browse details */
-"DENIED_BY_PRIVACY_DETAIL" = "Permission to search has been previously denied. This can be changed in the Settings App.";
+"DENIED_BY_PRIVACY_DETAIL" = "Permission to access local networks has been previously denied.
+This can be changed in the Settings App.";
 
 /* user has denied permission to browse button */
-"DENIED_BY_PRIVACY_BUTTON" = "Open Settings";
+"DENIED_BY_PRIVACY_BUTTON" = "Open Settings App";
 
-/* Cell title with active seaches */
-"SEARCHING" = "Scanning...";
+/* no services found title */
+"NO_SERVICES_TITLE" = "No services found.";
 
-/* Cell title with no services */
-"NO_SERVICES_CELL_TITLE" = "No services found";
-
-/* Cell details with no services */
-"NO_SERVICES_CELL_DETAIL" = "Are expected services running?";
-
-/* No services found alert OK action */
-"NO_SERVICES_ALERT_OK_ACTION" = "OK";
-
-/* No services found alert title */
-"NO_SERVICES_ALERT_TITLE" = "No Services Found";
-
-/* No services found alert message - replacement is network name */
-"NO_SERVICES_ALERT_MESSAGE" = "Unable to find services on %@.
+/* no services found details */
+"NO_SERVICES_DETAIL" = "Unable to find services on this network.
 
 Ensure you are on the desired network and expected services, applications, or devices are running.";
 
