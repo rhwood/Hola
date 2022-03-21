@@ -30,23 +30,28 @@ struct DomainView: View {
             }
             .emptyState(browser.services.isEmpty) {
                 VStack {
-                    switch browser.state {
-                    case .noNetwork:
-                        Text(LocalizedStringKey("NO_NETWORK_TITLE")).font(.headline)
-                            .padding()
-                        Text(LocalizedStringKey("NO_NETWORK_DETAIL"))
-                    case .privacyDenied:
-                        Text(LocalizedStringKey("DENIED_BY_PRIVACY_TITLE")).font(.headline)
-                            .padding()
-                        Text(LocalizedStringKey("DENIED_BY_PRIVACY_DETAIL"))
-                        Button(action: { openURL(URL(string: UIApplication.openSettingsURLString)!) }) {
-                            Text(LocalizedStringKey("DENIED_BY_PRIVACY_BUTTON"))
-                        }.padding()
-                    case .searching:
-                        ProgressView().scaleEffect(2.0).padding()
-                    case .stopped:
-                        Text(LocalizedStringKey("NO_SERVICES_TITLE")).font(.headline).padding()
-                        Text(LocalizedStringKey("NO_SERVICES_DETAIL"))
+                    if let error = browser.error {
+                        switch error {
+                        case .noNetwork:
+                            Text(LocalizedStringKey("NO_NETWORK_TITLE")).font(.headline)
+                                .padding()
+                            Text(LocalizedStringKey("NO_NETWORK_DETAIL"))
+                        case .privacyDenied:
+                            Text(LocalizedStringKey("DENIED_BY_PRIVACY_TITLE")).font(.headline)
+                                .padding()
+                            Text(LocalizedStringKey("DENIED_BY_PRIVACY_DETAIL"))
+                            Button(action: { openURL(URL(string: UIApplication.openSettingsURLString)!) }) {
+                                Text(LocalizedStringKey("DENIED_BY_PRIVACY_BUTTON"))
+                            }.padding()
+                        }
+                    } else {
+                        switch browser.state {
+                        case .searching:
+                            ProgressView().scaleEffect(2.0).padding()
+                        case .monitoring, .stopped:
+                            Text(LocalizedStringKey("NO_SERVICES_TITLE")).font(.headline).padding()
+                            Text(LocalizedStringKey("NO_SERVICES_DETAIL"))
+                        }
                     }
                     Spacer()
                 }

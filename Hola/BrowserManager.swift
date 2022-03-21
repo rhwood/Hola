@@ -52,33 +52,19 @@ public struct HolaService {
 
 class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, ObservableObject {
 
-    public enum State {
+    public enum Error {
         case privacyDenied
-        case searching
-        case stopped
         case noNetwork
     }
-    /// The manager's state.
-    ///
-    /// Unless `forceNextStateChange` is true, `.noNetwork` and `.privacyDenied`
-    /// states are preserved as they are error states.
-    @Published public private(set) var state: State = .stopped {
-        didSet {
-            if forceNextStateChange {
-                forceNextStateChange = false
-                if state != oldValue && oldValue == .privacyDenied {
-                    state = .privacyDenied
-                    return
-                }
-                if state != oldValue && oldValue == .noNetwork {
-                    state = .noNetwork
-                    return
-                }
-            }
-        }
+    public enum State {
+        case monitoring
+        case searching
+        case stopped
     }
-    /// Set to true to prevent state from preserving a .noNetwork or .privacyDenied state
-    private var forceNextStateChange = false
+    /// The manager's state.
+    @Published public private(set) var state: State = .stopped
+    /// Error states for UI.
+    @Published public private(set) var error: Error?
     @Published var services: [HolaService] = []
     let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "Browser")
     let nsbLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "NSBBrowser")
@@ -102,7 +88,7 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
                 searching = 0
             }
             if searching == 0 {
-                state = .stopped
+                state = .monitoring
             }
         }
     }
@@ -113,17 +99,14 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
     func search() {
         state = .searching
         if monitor == nil {
-            monitor = NWPathMonitor(prohibitedInterfaceTypes: [.cellular, .loopback, .other])
+            monitor = NWPathMonitor(requiredInterfaceType: .wifi)
             if let monitor = monitor {
                 monitor.pathUpdateHandler = { path in
                     DispatchQueue.main.async {
-                        if path.status == .unsatisfied {
-                            self.state = .noNetwork
-                        } else {
-                            self.logger.debug("Network change: \(path.debugDescription)")
-                        }
+                        self.handlePath(path)
                     }
                 }
+                self.handlePath(monitor.currentPath)
             }
         }
         if let monitor = monitor {
@@ -143,7 +126,9 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
                         case .waiting(let error):
                             self.handleError(browser: browser, error: error, prefix: "Waiting")
                         default:
-                            break
+                            if self.error == .privacyDenied {
+                                self.error = nil
+                            }
                         }
                     }
                 }
@@ -206,12 +191,24 @@ class BrowserManager: NSObject, NetServiceBrowserDelegate, NetServiceDelegate, O
 
     private func handleError(browser: NWBrowser, error: NWError, prefix: String) {
         if case let .dns(code) = error, code == kDNSServiceErr_PolicyDenied {
-            self.forceNextStateChange = true
-            self.state = .privacyDenied
+            self.error = .privacyDenied
         } else if case let .dns(code) = error, code == kDNSServiceErr_DefunctConnection {
+            if self.error == .privacyDenied {
+                self.error = nil
+            }
             self.refresh()
         } else {
             self.logger.error("\(prefix): \(error.debugDescription)")
+        }
+    }
+
+    private func handlePath(_ path: NWPath) {
+        switch path.status {
+        case .unsatisfied, .requiresConnection:
+            self.error = .noNetwork
+        default:
+            self.error = nil
+            self.logger.debug("Network change: \(path.debugDescription)")
         }
     }
 
