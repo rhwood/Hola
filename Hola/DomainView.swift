@@ -30,8 +30,8 @@ struct DomainView: View {
             }
             .emptyState(browser.services.isEmpty) {
                 VStack {
-                    GroupBox {
-                        if let error = browser.error {
+                    if let error = browser.error {
+                        GroupBox {
                             switch error {
                             case .noNetwork:
                                 Text(LocalizedStringKey("NO_NETWORK_TITLE")).font(.headline)
@@ -45,11 +45,13 @@ struct DomainView: View {
                                     Text(LocalizedStringKey("DENIED_BY_PRIVACY_BUTTON"))
                                 }.padding()
                             }
-                        } else {
-                            switch browser.state {
-                            case .searching:
-                                ProgressView().scaleEffect(2.0).padding()
-                            case .monitoring, .stopped:
+                        }
+                    } else {
+                        switch browser.state {
+                        case .searching:
+                            ProgressView().scaleEffect(2.0).padding()
+                        case .monitoring, .stopped:
+                            GroupBox {
                                 Text(LocalizedStringKey("NO_SERVICES_TITLE")).font(.headline).padding()
                                 Text(LocalizedStringKey("NO_SERVICES_DETAIL"))
                             }
