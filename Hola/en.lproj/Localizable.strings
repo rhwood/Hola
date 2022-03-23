@@ -51,6 +51,9 @@ Ensure you are on the desired network and expected services, applications, or de
 /* Unable to view service because unable to create URL */
 "UNABLE_TO_VIEW" = "Unable to view.";
 
+/* Refresh list when pull to refresh is not available */
+"REFRESH" = "Try Again";
+
 /*
  * SettingsView
  */

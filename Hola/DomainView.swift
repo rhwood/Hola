@@ -37,6 +37,9 @@ struct DomainView: View {
                                 Text(LocalizedStringKey("NO_NETWORK_TITLE")).font(.headline)
                                     .padding()
                                 Text(LocalizedStringKey("NO_NETWORK_DETAIL"))
+                                Button(action: { browser.refresh() }) {
+                                    Text(LocalizedStringKey("REFRESH"))
+                                }.padding()
                             case .privacyDenied:
                                 Text(LocalizedStringKey("DENIED_BY_PRIVACY_TITLE")).font(.headline)
                                     .padding()
@@ -54,6 +57,9 @@ struct DomainView: View {
                             GroupBox {
                                 Text(LocalizedStringKey("NO_SERVICES_TITLE")).font(.headline).padding()
                                 Text(LocalizedStringKey("NO_SERVICES_DETAIL"))
+                                Button(action: { browser.refresh() }) {
+                                    Text(LocalizedStringKey("REFRESH"))
+                                }.padding()
                             }
                         }
                     }
