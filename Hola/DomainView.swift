@@ -29,9 +29,11 @@ struct DomainView: View {
                 }
             }
             .emptyState(browser.services.isEmpty) {
-                VStack {
-                    if let error = browser.error {
-                        GroupBox {
+                // wrap empty state in a static list to enable pull to refresh
+                // leave "Try Again" buttons in place anyway
+                List {
+                    VStack {
+                        if let error = browser.error {
                             switch error {
                             case .noNetwork:
                                 Text(LocalizedStringKey("NO_NETWORK_TITLE")).font(.headline)
@@ -48,13 +50,11 @@ struct DomainView: View {
                                     Text(LocalizedStringKey("DENIED_BY_PRIVACY_BUTTON"))
                                 }.padding()
                             }
-                        }
-                    } else {
-                        switch browser.state {
-                        case .searching:
-                            ProgressView().scaleEffect(2.0).padding()
-                        case .monitoring, .stopped:
-                            GroupBox {
+                        } else {
+                            switch browser.state {
+                            case .searching:
+                                ProgressView().scaleEffect(2.0).padding()
+                            case .monitoring, .stopped:
                                 Text(LocalizedStringKey("NO_SERVICES_TITLE")).font(.headline).padding()
                                 Text(LocalizedStringKey("NO_SERVICES_DETAIL"))
                                 Button(action: { browser.refresh() }) {
@@ -63,9 +63,10 @@ struct DomainView: View {
                             }
                         }
                     }
-                    Spacer()
                 }
-                .padding()
+                .refreshable {
+                    browser.refresh()
+                }
             }
             .refreshable {
                 browser.refresh()
