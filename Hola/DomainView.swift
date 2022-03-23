@@ -29,43 +29,57 @@ struct DomainView: View {
                 }
             }
             .emptyState(browser.services.isEmpty) {
-                // wrap empty state in a static list to enable pull to refresh
-                // leave "Try Again" buttons in place anyway
-                List {
-                    VStack {
-                        if let error = browser.error {
-                            switch error {
-                            case .noNetwork:
-                                Text(LocalizedStringKey("NO_NETWORK_TITLE")).font(.headline)
-                                    .padding()
-                                Text(LocalizedStringKey("NO_NETWORK_DETAIL"))
-                                Button(action: { browser.refresh() }) {
-                                    Text(LocalizedStringKey("REFRESH"))
-                                }.padding()
-                            case .privacyDenied:
-                                Text(LocalizedStringKey("DENIED_BY_PRIVACY_TITLE")).font(.headline)
-                                    .padding()
-                                Text(LocalizedStringKey("DENIED_BY_PRIVACY_DETAIL"))
-                                Button(action: { openURL(URL(string: UIApplication.openSettingsURLString)!) }) {
-                                    Text(LocalizedStringKey("DENIED_BY_PRIVACY_BUTTON"))
-                                }.padding()
+                VStack {
+                    if let error = browser.error {
+                        // wrap empty state in a static list to enable pull to refresh
+                        // leave "Try Again" buttons in place anyway
+                        List {
+                            VStack {
+                                switch error {
+                                case .noNetwork:
+                                    Text(LocalizedStringKey("NO_NETWORK_TITLE")).font(.headline)
+                                        .padding()
+                                    Text(LocalizedStringKey("NO_NETWORK_DETAIL"))
+                                    Button(action: { browser.refresh() }) {
+                                        Text(LocalizedStringKey("REFRESH"))
+                                    }.padding()
+                                case .privacyDenied:
+                                    Text(LocalizedStringKey("DENIED_BY_PRIVACY_TITLE")).font(.headline)
+                                        .padding()
+                                    Text(LocalizedStringKey("DENIED_BY_PRIVACY_DETAIL"))
+                                    Button(action: { openURL(URL(string: UIApplication.openSettingsURLString)!) }) {
+                                        Text(LocalizedStringKey("DENIED_BY_PRIVACY_BUTTON"))
+                                    }.padding()
+                                }
                             }
-                        } else {
-                            switch browser.state {
-                            case .searching:
+                        }
+                        .refreshable {
+                            browser.refresh()
+                        }
+                    } else {
+                        switch browser.state {
+                        case .searching:
+                            VStack {
                                 ProgressView().scaleEffect(2.0).padding()
-                            case .monitoring, .stopped:
-                                Text(LocalizedStringKey("NO_SERVICES_TITLE")).font(.headline).padding()
-                                Text(LocalizedStringKey("NO_SERVICES_DETAIL"))
-                                Button(action: { browser.refresh() }) {
-                                    Text(LocalizedStringKey("REFRESH"))
-                                }.padding()
+                                Spacer()
+                            }
+                        case .monitoring, .stopped:
+                            // wrap empty state in a static list to enable pull to refresh
+                            // leave "Try Again" buttons in place anyway
+                            List {
+                                VStack {
+                                    Text(LocalizedStringKey("NO_SERVICES_TITLE")).font(.headline).padding()
+                                    Text(LocalizedStringKey("NO_SERVICES_DETAIL"))
+                                    Button(action: { browser.refresh() }) {
+                                        Text(LocalizedStringKey("REFRESH"))
+                                    }.padding()
+                                }
+                            }
+                            .refreshable {
+                                browser.refresh()
                             }
                         }
                     }
-                }
-                .refreshable {
-                    browser.refresh()
                 }
             }
             .refreshable {
