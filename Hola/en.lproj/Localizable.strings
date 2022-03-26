@@ -3,8 +3,12 @@
   Hola
 
   Created by Randall Wood on 3/9/18.
-  Copyright © 2018 Alexandria Software. All rights reserved.
+  Copyright © 2018, 2022 Alexandria Software. All rights reserved.
 */
+
+/*
+ * DomainView
+ */
 
 /* title if showing multiple or zero domains */
 "VIEW_TITLE" = "Services";
@@ -15,39 +19,86 @@
 /* services in default (local) domain */
 "LOCAL_SERVICES" = "Local Services";
 
-/* Cell title with active seaches */
-"SEARCHING" = "Scanning...";
+/* no usable network title */
+"NO_NETWORK_TITLE" = "Not on Wi-Fi.";
 
-/* Cell title with no services */
-"NO_SERVICES_CELL_TITLE" = "No services found";
+/* no usable network detail */
+"NO_NETWORK_DETAIL" = "Not connected to a Wi-Fi network. Cellular networks cannot be browsed for local network services.
 
-/* Cell details with no services */
-"NO_SERVICES_CELL_DETAIL" = "Are expected services running?";
+Please connect to a Wi-Fi network to browse for services.";
 
-/* No services found alert OK action */
-"NO_SERVICES_ALERT_OK_ACTION" = "OK";
+/* user has denied permission to browse title */
+"DENIED_BY_PRIVACY_TITLE" = "Not allowed to search.";
 
-/* No services found alert title */
-"NO_SERVICES_ALERT_TITLE" = "No Services Found";
+/* user has denied permission to browse details */
+"DENIED_BY_PRIVACY_DETAIL" = "Permission to access local networks has been previously denied.
+This can be changed in the Settings App.";
 
-/* No services found alert message - replacement is network name */
-"NO_SERVICES_ALERT_MESSAGE" = "Unable to find services on %@.
+/* user has denied permission to browse button */
+"DENIED_BY_PRIVACY_BUTTON" = "Open Settings App";
+
+/* no services found title */
+"NO_SERVICES_TITLE" = "No services found.";
+
+/* no services found details */
+"NO_SERVICES_DETAIL" = "Unable to find services on this network.
 
 Ensure you are on the desired network and expected services, applications, or devices are running.";
 
 /* Network name for unknown network */
 "THIS_NETWORK" = "this network";
 
+/* Unable to view service because unable to create URL */
+"UNABLE_TO_VIEW" = "Unable to view.";
+
+/* Refresh list when pull to refresh is not available */
+"REFRESH" = "Try Again";
+
+/*
+ * SettingsView
+ */
+
+/* Privacy Section */
+"PRIVACY" = "Privacy";
+
+/* Button to open Settings App */
+"SETTINGS_APP" = "Open Settings App";
+
+/* Privacy Controls explaination */
+"PRIVACY_CONTROLS" = "Privacy settings are controlled in the Settings App.";
+
+/* Contact Us */
+"CONTACT_US" = "Contact Us";
+
+/* Get help */
+"GET_HELP" = "Get Help";
+
 /* Alert title with no email */
-"NO_EMAIL_TITLE" = "Unable to Send Email";
+"GET_HELP_ERROR_TITLE" = "Unable to get help.";
 
 /* Alert message with no email */
-"NO_EMAIL_MESSAGE" = "This %@ does not appear to be configured to send email.
+"GET_HELP_ERROR_MESSAGE" = "Unable to send email to support@alexandriasoftware.com.
 
 Please contact us using a different device or computer.";
 
 /* Default action */
 "OK" = "OK";
 
+/* Privacy policy */
+"PRIVACY_POLICY" = "Privacy Policy";
+
 /* Privacy policy URL */
 "PRIVACY_POLICY_URL" = "https://www.iubenda.com/privacy-policy/77724957";
+
+/* Copyright Statement */
+"COPYRIGHT_STATEMENT" = "Copyright © 2017-2022 Randall Wood DBA Alexandria Software. All rights reserved.";
+
+/* Settings */
+"SETTINGS" = "Settings";
+
+/* About */
+"ABOUT" = "About";
+
+/* Version */
+"VERSION" = "Version";
+
