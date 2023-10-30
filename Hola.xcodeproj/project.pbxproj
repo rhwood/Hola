@@ -642,8 +642,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stleamist/BetterSafariView.git";
 			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 2.4.0;
+				kind = exactVersion;
+				version = 2.4.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
