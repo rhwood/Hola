@@ -3,7 +3,7 @@
 //  Hola
 //
 //  Created by Randall Wood on 9/7/18.
-//  Copyright © 2018 Alexandria Software. All rights reserved.
+//  Copyright © 2018 Randall Wood. All rights reserved.
 //
 
 struct ServiceType {

@@ -3,7 +3,7 @@
 //  Hola
 //
 //  Created by Randall Wood on 2022-01-16.
-//  Copyright © 2022 Alexandria Software. All rights reserved.
+//  Copyright © 2022 Randall Wood. All rights reserved.
 //
 
 import SwiftUI
@@ -31,7 +31,7 @@ struct SettingsView: View {
             }
             Section {
                 Button(action: {
-                    if let url = URL(string: "mailto:support@alexandriasoftware.com?subject=Hola! (\(shortVersion) (\(longVersion))) Feedback".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!) {
+                    if let url = URL(string: "mailto:alexandriasoftware@icloud.com?subject=Hola! (\(shortVersion) (\(longVersion))) Feedback".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!) {
                         openURL(url) { accepted in
                             if !accepted {
                                 onMail = true

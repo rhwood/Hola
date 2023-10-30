@@ -3,7 +3,7 @@
   Hola
 
   Created by Randall Wood on 3/9/18.
-  Copyright © 2018, 2022 Alexandria Software. All rights reserved.
+  Copyright © 2018, 2022 Randall Wood. All rights reserved.
 */
 
 /*
@@ -77,7 +77,7 @@ Ensure you are on the desired network and expected services, applications, or de
 "GET_HELP_ERROR_TITLE" = "Unable to get help.";
 
 /* Alert message with no email */
-"GET_HELP_ERROR_MESSAGE" = "Unable to send email to support@alexandriasoftware.com.
+"GET_HELP_ERROR_MESSAGE" = "Unable to send email to alexandriasoftware@icloud.com.
 
 Please contact us using a different device or computer.";
 
@@ -91,7 +91,7 @@ Please contact us using a different device or computer.";
 "PRIVACY_POLICY_URL" = "https://www.iubenda.com/privacy-policy/77724957";
 
 /* Copyright Statement */
-"COPYRIGHT_STATEMENT" = "Copyright © 2017-2022 Randall Wood DBA Alexandria Software. All rights reserved.";
+"COPYRIGHT_STATEMENT" = "Copyright © 2017-2022 Randall Wood. All rights reserved.";
 
 /* Settings */
 "SETTINGS" = "Settings";

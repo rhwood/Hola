@@ -3,7 +3,7 @@
 //  Hola
 //
 //  Created by Randall Wood on 9/23/18.
-//  Copyright © 2018, 2022 Alexandria Software. All rights reserved.
+//  Copyright © 2018, 2022 Randall Wood. All rights reserved.
 //
 
 import Foundation
